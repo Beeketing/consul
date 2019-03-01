@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/hashicorp/serf/coordinate"
+	"github.com/Beeketing/serf/coordinate"
 )
 
 // ComputeDistance returns the distance between the two network coordinates in

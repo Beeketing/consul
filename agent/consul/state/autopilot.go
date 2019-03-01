@@ -3,8 +3,8 @@ package state
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/agent/consul/autopilot"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/agent/consul/autopilot"
+	"github.com/Beeketing/go-memdb"
 )
 
 // autopilotConfigTableSchema returns a new table schema used for storing

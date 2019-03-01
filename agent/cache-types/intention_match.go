@@ -3,8 +3,8 @@ package cachetype
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/agent/cache"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/cache"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // Recommended name for registration.

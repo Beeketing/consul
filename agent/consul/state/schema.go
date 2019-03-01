@@ -3,7 +3,7 @@ package state
 import (
 	"fmt"
 
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/go-memdb"
 )
 
 // schemaFn is an interface function used to create and return

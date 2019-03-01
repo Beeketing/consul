@@ -10,8 +10,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/armon/circbuf"
-	"github.com/docker/go-connections/sockets"
+	"github.com/Beeketing/circbuf"
+	"github.com/Beeketing/go-connections/sockets"
 )
 
 // DockerClient is a simplified client for the Docker Engine API

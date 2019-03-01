@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/cli"
 )
 
 func New(ui cli.Ui) *cmd {

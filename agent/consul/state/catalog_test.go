@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/consul/types"
-	"github.com/hashicorp/go-memdb"
-	uuid "github.com/hashicorp/go-uuid"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/go-memdb"
+	uuid "github.com/Beeketing/go-uuid"
 	"github.com/pascaldekloe/goe/verify"
 	"github.com/stretchr/testify/assert"
 )

@@ -3,10 +3,10 @@ package consul
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/types"
-	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/go-version"
+	"github.com/Beeketing/serf/serf"
 )
 
 // lanMergeDelegate is used to handle a cluster merge on the LAN gossip

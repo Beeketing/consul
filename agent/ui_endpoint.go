@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
 )
 
 // ServiceSummary is used to summarize a service

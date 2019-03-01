@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-memdb"
 )
 
 func TestStateStore_GC(t *testing.T) {

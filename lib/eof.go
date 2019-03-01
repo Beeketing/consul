@@ -4,7 +4,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/hashicorp/yamux"
+	"github.com/Beeketing/yamux"
 )
 
 var yamuxStreamClosed = yamux.ErrStreamClosed.Error()

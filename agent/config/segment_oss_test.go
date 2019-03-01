@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/consul/testutil"
+	"github.com/Beeketing/consul/testutil"
 )
 
 func TestSegments(t *testing.T) {

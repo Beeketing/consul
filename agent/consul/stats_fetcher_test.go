@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/testrpc"
-	"github.com/hashicorp/consul/types"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/testrpc"
+	"github.com/Beeketing/consul/types"
 )
 
 func TestStatsFetcher(t *testing.T) {

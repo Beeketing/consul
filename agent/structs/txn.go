@@ -3,7 +3,7 @@ package structs
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/api"
 )
 
 // TxnKVOp is used to define a single operation on the KVS inside a

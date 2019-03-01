@@ -12,10 +12,10 @@ import (
 	osexec "os/exec"
 	"strconv"
 
-	"github.com/armon/circbuf"
-	"github.com/hashicorp/consul/agent/exec"
-	"github.com/hashicorp/consul/watch"
-	"github.com/hashicorp/go-cleanhttp"
+	"github.com/Beeketing/circbuf"
+	"github.com/Beeketing/consul/agent/exec"
+	"github.com/Beeketing/consul/watch"
+	"github.com/Beeketing/go-cleanhttp"
 	"golang.org/x/net/context"
 )
 

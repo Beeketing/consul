@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/consul/agent/config"
+	"github.com/Beeketing/consul/agent/config"
 )
 
 var errInvalidHeaderFormat = errors.New("agent: invalid format of 'header' field")

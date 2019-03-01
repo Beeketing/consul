@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/hashicorp/consul/types"
+	"github.com/Beeketing/consul/types"
 )
 
 type Notify struct {

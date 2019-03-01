@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // IndexConnectService indexes a *struct.ServiceNode for querying by

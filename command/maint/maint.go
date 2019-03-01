@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/cli"
 )
 
 // cmd is a Command implementation that enables or disables

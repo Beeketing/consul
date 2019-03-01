@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/consul/agent/cache"
-	"github.com/hashicorp/go-multierror"
-	"github.com/mitchellh/hashstructure"
+	"github.com/Beeketing/consul/agent/cache"
+	"github.com/Beeketing/go-multierror"
+	"github.com/Beeketing/hashstructure"
 )
 
 const (

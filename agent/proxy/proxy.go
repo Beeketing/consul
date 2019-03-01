@@ -8,7 +8,7 @@
 package proxy
 
 import (
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 const (

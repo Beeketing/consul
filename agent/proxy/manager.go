@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/consul/agent/local"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-multierror"
+	"github.com/Beeketing/consul/agent/local"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-multierror"
 )
 
 const (

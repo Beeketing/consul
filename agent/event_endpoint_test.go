@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/testutil/retry"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/testutil/retry"
 )
 
 func TestEventFire(t *testing.T) {

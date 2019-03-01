@@ -3,8 +3,8 @@ package logger
 import (
 	"bytes"
 
-	"github.com/hashicorp/go-syslog"
-	"github.com/hashicorp/logutils"
+	"github.com/Beeketing/go-syslog"
+	"github.com/Beeketing/logutils"
 )
 
 // levelPriority is used to map a log level to a

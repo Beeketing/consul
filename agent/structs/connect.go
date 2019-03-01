@@ -3,7 +3,7 @@ package structs
 import (
 	"fmt"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/mapstructure"
 )
 
 // ConnectAuthorizeRequest is the structure of a request to authorize

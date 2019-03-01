@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/serf/coordinate"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/serf/coordinate"
 )
 
 func TestCoordinate_Disabled_Response(t *testing.T) {

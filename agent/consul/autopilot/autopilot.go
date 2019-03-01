@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/raft"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/go-version"
+	"github.com/Beeketing/raft"
+	"github.com/Beeketing/serf/serf"
 )
 
 // Delegate is the interface for the Autopilot mechanism

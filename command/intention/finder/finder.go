@@ -5,7 +5,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/api"
 )
 
 // Finder finds intentions by a src/dst exact match. There is currently

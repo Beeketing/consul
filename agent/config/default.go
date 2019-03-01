@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/hashicorp/consul/agent/consul"
-	"github.com/hashicorp/consul/version"
+	"github.com/Beeketing/consul/agent/consul"
+	"github.com/Beeketing/consul/version"
 )
 
 func DefaultRPCProtocol() (int, error) {

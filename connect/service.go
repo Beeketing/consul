@@ -11,8 +11,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/watch"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/watch"
 	"golang.org/x/net/http2"
 )
 

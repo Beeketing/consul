@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/hashicorp/go-uuid"
+	"github.com/Beeketing/go-uuid"
 )
 
 // WriteAtomic writes the given contents to a temporary file in the same

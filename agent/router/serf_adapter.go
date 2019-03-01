@@ -3,9 +3,9 @@ package router
 import (
 	"log"
 
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/types"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/serf/serf"
 )
 
 // routerFn selects one of the router operations to map to incoming Serf events.

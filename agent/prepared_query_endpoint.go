@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/consul"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/consul"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // preparedQueryCreateResponse is used to wrap the query ID.

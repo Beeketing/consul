@@ -3,7 +3,7 @@ package impexp
 import (
 	"encoding/base64"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/api"
 )
 
 type Entry struct {

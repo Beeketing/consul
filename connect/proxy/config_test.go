@@ -8,9 +8,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/connect"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/connect"
 	"github.com/stretchr/testify/require"
 )
 

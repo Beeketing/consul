@@ -6,10 +6,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/hil"
-	"github.com/hashicorp/hil/ast"
-	"github.com/mitchellh/copystructure"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/hil"
+	"github.com/Beeketing/hil/ast"
+	"github.com/Beeketing/copystructure"
 )
 
 // IsTemplate returns true if the given query is a template.

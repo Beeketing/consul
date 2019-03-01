@@ -1,6 +1,6 @@
 package structs
 
-import "github.com/hashicorp/consul/types"
+import "github.com/Beeketing/consul/types"
 
 // QueryDatacenterOptions sets options about how we fail over if there are no
 // healthy nodes in the local datacenter.

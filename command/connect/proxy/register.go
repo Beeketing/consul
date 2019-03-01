@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/api"
 )
 
 const (

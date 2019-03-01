@@ -1,7 +1,7 @@
 package sentinel
 
 import (
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/api"
 )
 
 // ScopeFn is a callback that provides a sentinel scope. This is a callback

@@ -3,8 +3,8 @@ package consul
 import (
 	"time"
 
-	"github.com/hashicorp/consul/agent/router"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/router"
+	"github.com/Beeketing/serf/serf"
 )
 
 // FloodNotify lets all the waiting Flood goroutines know that some change may

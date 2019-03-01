@@ -3,8 +3,8 @@ package structs
 import (
 	"net"
 
-	"github.com/hashicorp/consul/agent/consul/autopilot"
-	"github.com/hashicorp/raft"
+	"github.com/Beeketing/consul/agent/consul/autopilot"
+	"github.com/Beeketing/raft"
 )
 
 // RaftServer has information about a server in the Raft configuration.

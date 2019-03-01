@@ -5,10 +5,10 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hashicorp/consul/agent/consul/autopilot"
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/agent/pool"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/consul/autopilot"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/agent/pool"
+	"github.com/Beeketing/serf/serf"
 )
 
 // StatsFetcher has two functions for autopilot. First, lets us fetch all the

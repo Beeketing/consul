@@ -4,10 +4,10 @@ import (
 	"reflect"
 	"time"
 
-	metrics "github.com/armon/go-metrics"
-	"github.com/armon/go-metrics/circonus"
-	"github.com/armon/go-metrics/datadog"
-	"github.com/armon/go-metrics/prometheus"
+	metrics "github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/go-metrics/circonus"
+	"github.com/Beeketing/go-metrics/datadog"
+	"github.com/Beeketing/go-metrics/prometheus"
 )
 
 // TelemetryConfig is embedded in config.RuntimeConfig and holds the

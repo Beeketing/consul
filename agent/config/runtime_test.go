@@ -18,10 +18,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/consul/testutil"
-	"github.com/hashicorp/consul/types"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/consul/testutil"
+	"github.com/Beeketing/consul/types"
 	"github.com/pascaldekloe/goe/verify"
 	"github.com/stretchr/testify/require"
 )

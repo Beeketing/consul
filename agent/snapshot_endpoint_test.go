@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/acl"
+	"github.com/Beeketing/consul/acl"
 )
 
 func TestSnapshot(t *testing.T) {

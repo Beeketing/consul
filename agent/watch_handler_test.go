@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/watch"
+	"github.com/Beeketing/consul/watch"
 )
 
 func TestMakeWatchHandler(t *testing.T) {

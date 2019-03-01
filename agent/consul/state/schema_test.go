@@ -3,7 +3,7 @@ package state
 import (
 	"testing"
 
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/go-memdb"
 )
 
 func TestStateStore_Schema(t *testing.T) {

@@ -1,8 +1,8 @@
 package snapshot
 
 import (
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/cli"
 )
 
 func New() *cmd {

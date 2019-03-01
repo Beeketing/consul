@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/go-syslog"
-	"github.com/hashicorp/logutils"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/go-syslog"
+	"github.com/Beeketing/logutils"
+	"github.com/Beeketing/cli"
 )
 
 // Config is used to set up logging.

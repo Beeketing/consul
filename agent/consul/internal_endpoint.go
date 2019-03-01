@@ -3,12 +3,12 @@ package consul
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/consul/state"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-memdb"
-	"github.com/hashicorp/go-multierror"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/consul/state"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-memdb"
+	"github.com/Beeketing/go-multierror"
+	"github.com/Beeketing/serf/serf"
 )
 
 // Internal endpoint is used to query the miscellaneous info that

@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"sync"
 
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/api"
 )
 
 // Resolver is the interface implemented by a service discovery mechanism to get

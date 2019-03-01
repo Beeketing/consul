@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/hashicorp/serf/coordinate"
+	"github.com/Beeketing/serf/coordinate"
 )
 
 // CoordinateEntry represents a node and its associated network coordinate.

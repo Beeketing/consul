@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/mapstructure"
 )
 
 func TestConfigUtil_Values(t *testing.T) {

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/go-version"
+	"github.com/Beeketing/serf/serf"
 )
 
 // Key is used in maps and for equality tests.  A key is based on endpoints.

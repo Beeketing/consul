@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/agent/consul/state"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/agent/consul/state"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-memdb"
 )
 
 var ErrConnectNotEnabled = errors.New("Connect must be enabled in order to use this endpoint")

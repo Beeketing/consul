@@ -7,8 +7,8 @@ import (
 	"net"
 	"sync/atomic"
 
-	"github.com/hashicorp/consul/lib/freeport"
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/consul/lib/freeport"
+	"github.com/Beeketing/go-testing-interface"
 	"github.com/stretchr/testify/require"
 )
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/consul/agent/connect/ca"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/connect/ca"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // GET /v1/connect/ca/roots

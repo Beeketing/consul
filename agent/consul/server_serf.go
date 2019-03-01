@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/raft"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/raft"
+	"github.com/Beeketing/serf/serf"
 )
 
 const (

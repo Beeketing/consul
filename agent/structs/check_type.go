@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/hashicorp/consul/types"
+	"github.com/Beeketing/consul/types"
 )
 
 // CheckType is used to create either the CheckMonitor or the CheckTTL.

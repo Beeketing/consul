@@ -7,9 +7,9 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/hashicorp/consul/snapshot"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/consul/snapshot"
+	"github.com/Beeketing/cli"
 )
 
 func New(ui cli.Ui) *cmd {

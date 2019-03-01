@@ -6,9 +6,9 @@ import (
 	"net"
 	"testing"
 
-	"github.com/hashicorp/consul/testutil/retry"
+	"github.com/Beeketing/consul/testutil/retry"
 	"github.com/hashicorp/raft"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/serf/serf"
 )
 
 func waitForLeader(servers ...*Server) error {

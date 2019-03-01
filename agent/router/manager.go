@@ -13,8 +13,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/lib"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/lib"
 )
 
 const (

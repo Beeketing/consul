@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	text "github.com/tonnerre/golang-text"
+	text "github.com/Beeketing/golang-text"
 )
 
 func Usage(txt string, flags *flag.FlagSet) string {

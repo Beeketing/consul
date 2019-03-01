@@ -18,10 +18,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/testutil"
-	"github.com/hashicorp/go-cleanhttp"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/testutil"
+	"github.com/Beeketing/go-cleanhttp"
 	"golang.org/x/net/http2"
 )
 

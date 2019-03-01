@@ -3,7 +3,7 @@
 package config
 
 import (
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 func (b *Builder) validateSegments(rt RuntimeConfig) error {

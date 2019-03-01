@@ -5,10 +5,10 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/go-memdb"
-	"github.com/hashicorp/serf/coordinate"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/go-memdb"
+	"github.com/Beeketing/serf/coordinate"
 	"github.com/pascaldekloe/goe/verify"
 )
 

@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/api"
 )
 
 type apiHandler struct{}

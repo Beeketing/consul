@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/logger"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/logger"
 	"github.com/mitchellh/cli"
 )
 

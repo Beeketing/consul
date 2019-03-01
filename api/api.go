@@ -17,8 +17,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/go-cleanhttp"
-	"github.com/hashicorp/go-rootcerts"
+	"github.com/Beeketing/go-cleanhttp"
+	"github.com/Beeketing/go-rootcerts"
 )
 
 const (

@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/testutil"
+	"github.com/Beeketing/consul/testutil"
 	"github.com/stretchr/testify/require"
 )
 

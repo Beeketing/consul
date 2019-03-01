@@ -7,12 +7,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/consul/agent"
-	agConnect "github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/connect"
-	"github.com/hashicorp/consul/lib/freeport"
-	"github.com/hashicorp/consul/testutil/retry"
+	"github.com/Beeketing/consul/agent"
+	agConnect "github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/connect"
+	"github.com/Beeketing/consul/lib/freeport"
+	"github.com/Beeketing/consul/testutil/retry"
 	"github.com/stretchr/testify/require"
 )
 

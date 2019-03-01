@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/consul/testrpc"
-	"github.com/hashicorp/consul/testutil/retry"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/consul/testrpc"
+	"github.com/Beeketing/consul/testutil/retry"
 	"github.com/hashicorp/net-rpc-msgpackrpc"
 )
 

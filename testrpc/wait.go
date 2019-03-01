@@ -3,8 +3,8 @@ package testrpc
 import (
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/testutil/retry"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/testutil/retry"
 )
 
 type rpcFn func(string, interface{}, interface{}) error

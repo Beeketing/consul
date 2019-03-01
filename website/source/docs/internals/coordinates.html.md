@@ -75,7 +75,7 @@ import (
     "math"
     "time"
 
-    "github.com/hashicorp/serf/coordinate"
+    "github.com/Beeketing/serf/coordinate"
 )
 
 func dist(a *coordinate.Coordinate, b *coordinate.Coordinate) time.Duration {

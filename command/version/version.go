@@ -3,9 +3,9 @@ package version
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/agent/config"
-	"github.com/hashicorp/consul/agent/consul"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/agent/config"
+	"github.com/Beeketing/consul/agent/consul"
+	"github.com/Beeketing/cli"
 )
 
 func New(ui cli.Ui, version string) *cmd {

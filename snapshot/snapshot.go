@@ -11,7 +11,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/hashicorp/raft"
+	"github.com/Beeketing/raft"
 )
 
 // Snapshot is a structure that holds state about a temporary file that is used

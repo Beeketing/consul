@@ -1,7 +1,7 @@
 package structs
 
 import (
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/go-testing-interface"
 )
 
 // TestIntention returns a valid, uninserted (no ID set) intention.

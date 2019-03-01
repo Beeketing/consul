@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/go-testing-interface"
 	"github.com/stretchr/testify/mock"
 )
 

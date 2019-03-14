@@ -6,8 +6,8 @@ import { get } from '@ember/object';
 import WithAclActions from 'consul-ui/mixins/intention/with-actions';
 
 export default Route.extend(WithAclActions, {
-  repo: service('repository/intention'),
-  servicesRepo: service('repository/service'),
+  repo: service('intentions'),
+  servicesRepo: service('services'),
   model: function(params) {
     return hash({
       isLoading: false,

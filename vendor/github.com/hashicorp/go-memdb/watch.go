@@ -1,9 +1,6 @@
 package memdb
 
-import (
-	"context"
-	"time"
-)
+import "time"
 
 // WatchSet is a collection of watch channels.
 type WatchSet map[<-chan struct{}]struct{}
@@ -49,29 +46,6 @@ func (w WatchSet) Watch(timeoutCh <-chan time.Time) bool {
 		return false
 	}
 
-	// Create a context that gets cancelled when the timeout is triggered
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	go func() {
-		select {
-		case <-timeoutCh:
-			cancel()
-		case <-ctx.Done():
-		}
-	}()
-
-	return w.WatchCtx(ctx) == context.Canceled
-}
-
-// WatchCtx is used to wait for either the watch set to trigger or for the
-// context to be cancelled. Watch with a timeout channel can be mimicked by
-// creating a context with a deadline. WatchCtx should be preferred over Watch.
-func (w WatchSet) WatchCtx(ctx context.Context) error {
-	if w == nil {
-		return nil
-	}
-
 	if n := len(w); n <= aFew {
 		idx := 0
 		chunk := make([]<-chan struct{}, aFew)
@@ -79,18 +53,23 @@ func (w WatchSet) WatchCtx(ctx context.Context) error {
 			chunk[idx] = watchCh
 			idx++
 		}
-		return watchFew(ctx, chunk)
+		return watchFew(chunk, timeoutCh)
+	} else {
+		return w.watchMany(timeoutCh)
 	}
-
-	return w.watchMany(ctx)
 }
 
 // watchMany is used if there are many watchers.
-func (w WatchSet) watchMany(ctx context.Context) error {
+func (w WatchSet) watchMany(timeoutCh <-chan time.Time) bool {
+	// Make a fake timeout channel we can feed into watchFew to cancel all
+	// the blocking goroutines.
+	doneCh := make(chan time.Time)
+	defer close(doneCh)
+
 	// Set up a goroutine for each watcher.
 	triggerCh := make(chan struct{}, 1)
 	watcher := func(chunk []<-chan struct{}) {
-		if err := watchFew(ctx, chunk); err == nil {
+		if timeout := watchFew(chunk, doneCh); !timeout {
 			select {
 			case triggerCh <- struct{}{}:
 			default:
@@ -122,8 +101,8 @@ func (w WatchSet) watchMany(ctx context.Context) error {
 	// Wait for a channel to trigger or timeout.
 	select {
 	case <-triggerCh:
-		return nil
-	case <-ctx.Done():
-		return ctx.Err()
+		return false
+	case <-timeoutCh:
+		return true
 	}
 }

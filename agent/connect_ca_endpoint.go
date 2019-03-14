@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/hashicorp/consul/agent/connect/ca"
 	"github.com/hashicorp/consul/agent/structs"
 )
 
@@ -80,7 +81,7 @@ func (s *HTTPServer) ConnectCAConfigurationSet(resp http.ResponseWriter, req *ht
 func fixupConfig(conf *structs.CAConfiguration) {
 	for k, v := range conf.Config {
 		if raw, ok := v.([]uint8); ok {
-			strVal := structs.Uint8ToString(raw)
+			strVal := ca.Uint8ToString(raw)
 			conf.Config[k] = strVal
 			switch conf.Provider {
 			case structs.ConsulCAProvider:

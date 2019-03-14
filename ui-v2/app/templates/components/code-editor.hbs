@@ -3,16 +3,6 @@
     readonly=readonly
     name=name
     class=class
-    options=options
+    options=(hash lineNumbers=true mode=mode theme='hashi')
     valueUpdated=(action onkeyup)
 }}
-{{#if (not syntax)}}
-{{#power-select
-  onchange=(action onchange)
-  selected=mode
-  searchEnabled=false
-  options=modes as |mode|
-}}
-  {{mode.name}}
-{{/power-select}}
-{{/if}}

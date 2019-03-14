@@ -46,3 +46,10 @@ func (n *NotifyGroup) Clear(ch chan struct{}) {
 	}
 	delete(n.notify, ch)
 }
+
+// WaitCh allocates a channel that is subscribed to notifications
+func (n *NotifyGroup) WaitCh() chan struct{} {
+	ch := make(chan struct{}, 1)
+	n.Wait(ch)
+	return ch
+}

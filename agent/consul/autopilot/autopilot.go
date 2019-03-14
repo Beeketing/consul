@@ -204,19 +204,12 @@ func (a *Autopilot) pruneDeadServers() error {
 		}
 		if server != nil {
 			// todo(kyhavlov): change this to index by UUID
-			s, found := staleRaftServers[server.Addr.String()]
-			if found {
+			if _, ok := staleRaftServers[server.Addr.String()]; ok {
 				delete(staleRaftServers, server.Addr.String())
 			}
 
 			if member.Status == serf.StatusFailed {
-				// If the node is a nonvoter, we can remove it immediately.
-				if found && s.Suffrage == raft.Nonvoter {
-					a.logger.Printf("[INFO] autopilot: Attempting removal of failed server node %q", member.Name)
-					go serfLAN.RemoveFailedNode(member.Name)
-				} else {
-					failed = append(failed, member.Name)
-				}
+				failed = append(failed, member.Name)
 			}
 		}
 	}

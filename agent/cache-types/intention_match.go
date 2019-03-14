@@ -39,7 +39,3 @@ func (c *IntentionMatch) Fetch(opts cache.FetchOptions, req cache.Request) (cach
 	result.Index = reply.Index
 	return result, nil
 }
-
-func (c *IntentionMatch) SupportsBlocking() bool {
-	return true
-}

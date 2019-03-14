@@ -796,7 +796,7 @@ func TestFSM_ACL_CRUD(t *testing.T) {
 		ACL: structs.ACL{
 			ID:   generateUUID(),
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 		},
 	}
 	buf, err := structs.Encode(structs.ACLRequestType, req)
@@ -810,7 +810,7 @@ func TestFSM_ACL_CRUD(t *testing.T) {
 
 	// Get the ACL.
 	id := resp.(string)
-	_, acl, err := fsm.state.ACLTokenGetBySecret(nil, id)
+	_, acl, err := fsm.state.ACLGet(nil, id)
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
@@ -819,13 +819,13 @@ func TestFSM_ACL_CRUD(t *testing.T) {
 	}
 
 	// Verify the ACL.
-	if acl.SecretID != id {
+	if acl.ID != id {
 		t.Fatalf("bad: %v", *acl)
 	}
-	if acl.Description != "User token" {
+	if acl.Name != "User token" {
 		t.Fatalf("bad: %v", *acl)
 	}
-	if acl.Type != structs.ACLTokenTypeClient {
+	if acl.Type != structs.ACLTypeClient {
 		t.Fatalf("bad: %v", *acl)
 	}
 
@@ -846,7 +846,7 @@ func TestFSM_ACL_CRUD(t *testing.T) {
 		t.Fatalf("resp: %v", resp)
 	}
 
-	_, acl, err = fsm.state.ACLTokenGetBySecret(nil, id)
+	_, acl, err = fsm.state.ACLGet(nil, id)
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
@@ -868,13 +868,15 @@ func TestFSM_ACL_CRUD(t *testing.T) {
 	if enabled, ok := resp.(bool); !ok || !enabled {
 		t.Fatalf("resp: %v", resp)
 	}
-	canBootstrap, _, err := fsm.state.CanBootstrapACLToken()
+	gotB, err := fsm.state.ACLGetBootstrap()
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
-	if !canBootstrap {
-		t.Fatalf("bad: shouldn't be able to bootstrap")
+	wantB := &structs.ACLBootstrap{
+		AllowBootstrap: true,
+		RaftIndex:      gotB.RaftIndex,
 	}
+	verify.Values(t, "", gotB, wantB)
 
 	// Do a bootstrap.
 	bootstrap := structs.ACLRequest{
@@ -883,7 +885,7 @@ func TestFSM_ACL_CRUD(t *testing.T) {
 		ACL: structs.ACL{
 			ID:   generateUUID(),
 			Name: "Bootstrap Token",
-			Type: structs.ACLTokenTypeManagement,
+			Type: structs.ACLTypeManagement,
 		},
 	}
 	buf, err = structs.Encode(structs.ACLRequestType, bootstrap)

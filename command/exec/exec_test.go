@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/testrpc"
-
 	"github.com/hashicorp/consul/agent"
 	consulapi "github.com/hashicorp/consul/api"
 	"github.com/hashicorp/consul/testutil/retry"
@@ -26,8 +24,6 @@ func TestExecCommand(t *testing.T) {
 		disable_remote_exec = false
 	`)
 	defer a.Shutdown()
-
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	ui := cli.NewMockUi()
 	c := New(ui, nil)
@@ -50,8 +46,6 @@ func TestExecCommand_NoShell(t *testing.T) {
 	`)
 	defer a.Shutdown()
 
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
-
 	ui := cli.NewMockUi()
 	c := New(ui, nil)
 	args := []string{"-http-addr=" + a.HTTPAddr(), "-shell=false", "-wait=1s", "uptime"}
@@ -73,15 +67,11 @@ func TestExecCommand_CrossDC(t *testing.T) {
 	`)
 	defer a1.Shutdown()
 
-	testrpc.WaitForTestAgent(t, a1.RPC, "dc1")
-
 	a2 := agent.NewTestAgent(t.Name(), `
 		datacenter = "dc2"
 		disable_remote_exec = false
 	`)
 	defer a2.Shutdown()
-
-	testrpc.WaitForTestAgent(t, a2.RPC, "dc2")
 
 	// Join over the WAN
 	_, err := a2.JoinWAN([]string{a1.Config.SerfBindAddrWAN.String()})
@@ -89,12 +79,14 @@ func TestExecCommand_CrossDC(t *testing.T) {
 		t.Fatalf("err: %v", err)
 	}
 
-	if got, want := len(a1.WANMembers()), 2; got != want {
-		t.Fatalf("got %d WAN members on a1 want %d", got, want)
-	}
-	if got, want := len(a2.WANMembers()), 2; got != want {
-		t.Fatalf("got %d WAN members on a2 want %d", got, want)
-	}
+	retry.Run(t, func(r *retry.R) {
+		if got, want := len(a1.WANMembers()), 2; got != want {
+			r.Fatalf("got %d WAN members on a1 want %d", got, want)
+		}
+		if got, want := len(a2.WANMembers()), 2; got != want {
+			r.Fatalf("got %d WAN members on a2 want %d", got, want)
+		}
+	})
 
 	ui := cli.NewMockUi()
 	c := New(ui, nil)
@@ -153,11 +145,10 @@ func TestExecCommand_Sessions(t *testing.T) {
 	`)
 	defer a.Shutdown()
 
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
-
 	ui := cli.NewMockUi()
 	c := New(ui, nil)
 	c.apiclient = a.Client()
+
 	id, err := c.createSession()
 	if err != nil {
 		t.Fatalf("err: %v", err)
@@ -243,12 +234,10 @@ func TestExecCommand_UploadDestroy(t *testing.T) {
 	`)
 	defer a.Shutdown()
 
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
-
 	ui := cli.NewMockUi()
-
 	c := New(ui, nil)
 	c.apiclient = a.Client()
+
 	id, err := c.createSession()
 	if err != nil {
 		t.Fatalf("err: %v", err)
@@ -300,8 +289,6 @@ func TestExecCommand_StreamResults(t *testing.T) {
 	`)
 	defer a.Shutdown()
 
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
-
 	ui := cli.NewMockUi()
 	c := New(ui, nil)
 	c.apiclient = a.Client()
@@ -334,16 +321,14 @@ func TestExecCommand_StreamResults(t *testing.T) {
 		t.Fatalf("should be ok bro")
 	}
 
-	retry.Run(t, func(r *retry.R) {
-		select {
-		case a := <-ackCh:
-			if a.Node != "foo" {
-				r.Fatalf("bad: %#v", a)
-			}
-		case <-time.After(50 * time.Millisecond):
-			r.Fatalf("timeout")
+	select {
+	case a := <-ackCh:
+		if a.Node != "foo" {
+			t.Fatalf("bad: %#v", a)
 		}
-	})
+	case <-time.After(50 * time.Millisecond):
+		t.Fatalf("timeout")
+	}
 
 	ok, _, err = a.Client().KV().Acquire(&consulapi.KVPair{
 		Key:     prefix + "foo/exit",
@@ -357,16 +342,14 @@ func TestExecCommand_StreamResults(t *testing.T) {
 		t.Fatalf("should be ok bro")
 	}
 
-	retry.Run(t, func(r *retry.R) {
-		select {
-		case e := <-exitCh:
-			if e.Node != "foo" || e.Code != 127 {
-				r.Fatalf("bad: %#v", e)
-			}
-		case <-time.After(50 * time.Millisecond):
-			r.Fatalf("timeout")
+	select {
+	case e := <-exitCh:
+		if e.Node != "foo" || e.Code != 127 {
+			t.Fatalf("bad: %#v", e)
 		}
-	})
+	case <-time.After(50 * time.Millisecond):
+		t.Fatalf("timeout")
+	}
 
 	// Random key, should ignore
 	ok, _, err = a.Client().KV().Acquire(&consulapi.KVPair{
@@ -392,16 +375,14 @@ func TestExecCommand_StreamResults(t *testing.T) {
 		t.Fatalf("should be ok bro")
 	}
 
-	retry.Run(t, func(r *retry.R) {
-		select {
-		case h := <-heartCh:
-			if h.Node != "foo" {
-				r.Fatalf("bad: %#v", h)
-			}
-		case <-time.After(50 * time.Millisecond):
-			r.Fatalf("timeout")
+	select {
+	case h := <-heartCh:
+		if h.Node != "foo" {
+			t.Fatalf("bad: %#v", h)
 		}
-	})
+	case <-time.After(50 * time.Millisecond):
+		t.Fatalf("timeout")
+	}
 
 	// Output value
 	ok, _, err = a.Client().KV().Acquire(&consulapi.KVPair{
@@ -416,14 +397,12 @@ func TestExecCommand_StreamResults(t *testing.T) {
 		t.Fatalf("should be ok bro")
 	}
 
-	retry.Run(t, func(r *retry.R) {
-		select {
-		case o := <-outputCh:
-			if o.Node != "foo" || string(o.Output) != "test" {
-				r.Fatalf("bad: %#v", o)
-			}
-		case <-time.After(50 * time.Millisecond):
-			r.Fatalf("timeout")
+	select {
+	case o := <-outputCh:
+		if o.Node != "foo" || string(o.Output) != "test" {
+			t.Fatalf("bad: %#v", o)
 		}
-	})
+	case <-time.After(50 * time.Millisecond):
+		t.Fatalf("timeout")
+	}
 }

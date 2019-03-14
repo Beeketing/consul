@@ -1,5 +1,4 @@
 @setupApplicationTest
-@ignore
 Feature: settings / update: Update Settings
   In order to authenticate with an ACL token
   As a user
@@ -10,14 +9,11 @@ Feature: settings / update: Update Settings
     Then the url should be /settings
     Then I have settings like yaml
     ---
-    consul:token: ~
+      token: ~
     ---
     And I submit
     Then I have settings like yaml
     ---
-    consul:token: ''
+      token: ''
     ---
-    And the url should be /settings
-    And "[data-notification]" has the "notification-update" class
-    And "[data-notification]" has the "success" class
 

@@ -306,9 +306,8 @@ func (s *StateSyncer) Paused() bool {
 	return s.paused != 0
 }
 
-// Resume re-enables sync runs. It returns true if it was the last pause/resume
-// pair on the stack and so actually caused the state syncer to resume.
-func (s *StateSyncer) Resume() bool {
+// Resume re-enables sync runs.
+func (s *StateSyncer) Resume() {
 	s.pauseLock.Lock()
 	s.paused--
 	if s.paused < 0 {
@@ -319,5 +318,4 @@ func (s *StateSyncer) Resume() bool {
 	if trigger {
 		s.SyncChanges.Trigger()
 	}
-	return trigger
 }

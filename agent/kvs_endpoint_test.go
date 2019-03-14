@@ -8,8 +8,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hashicorp/consul/testrpc"
-
 	"github.com/hashicorp/consul/agent/structs"
 )
 
@@ -343,8 +341,6 @@ func TestKVSEndpoint_AcquireRelease(t *testing.T) {
 	t.Parallel()
 	a := NewTestAgent(t.Name(), "")
 	defer a.Shutdown()
-
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	// Acquire the lock
 	id := makeTestSession(t, a.srv)

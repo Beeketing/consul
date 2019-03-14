@@ -1,9 +1,8 @@
+//go:generate sh -c "go run watch-gen/main.go >watch_few.go"
 package memdb
 
-//go:generate sh -c "go run watch-gen/main.go >watch_few.go"
-
 import(
-	"context"
+	"time"
 )
 
 // aFew gives how many watchers this function is wired to support. You must
@@ -12,106 +11,106 @@ const aFew = 32
 
 // watchFew is used if there are only a few watchers as a performance
 // optimization.
-func watchFew(ctx context.Context, ch []<-chan struct{}) error {
+func watchFew(ch []<-chan struct{}, timeoutCh <-chan time.Time) bool {
 	select {
 
 	case <-ch[0]:
-		return nil
+		return false
 
 	case <-ch[1]:
-		return nil
+		return false
 
 	case <-ch[2]:
-		return nil
+		return false
 
 	case <-ch[3]:
-		return nil
+		return false
 
 	case <-ch[4]:
-		return nil
+		return false
 
 	case <-ch[5]:
-		return nil
+		return false
 
 	case <-ch[6]:
-		return nil
+		return false
 
 	case <-ch[7]:
-		return nil
+		return false
 
 	case <-ch[8]:
-		return nil
+		return false
 
 	case <-ch[9]:
-		return nil
+		return false
 
 	case <-ch[10]:
-		return nil
+		return false
 
 	case <-ch[11]:
-		return nil
+		return false
 
 	case <-ch[12]:
-		return nil
+		return false
 
 	case <-ch[13]:
-		return nil
+		return false
 
 	case <-ch[14]:
-		return nil
+		return false
 
 	case <-ch[15]:
-		return nil
+		return false
 
 	case <-ch[16]:
-		return nil
+		return false
 
 	case <-ch[17]:
-		return nil
+		return false
 
 	case <-ch[18]:
-		return nil
+		return false
 
 	case <-ch[19]:
-		return nil
+		return false
 
 	case <-ch[20]:
-		return nil
+		return false
 
 	case <-ch[21]:
-		return nil
+		return false
 
 	case <-ch[22]:
-		return nil
+		return false
 
 	case <-ch[23]:
-		return nil
+		return false
 
 	case <-ch[24]:
-		return nil
+		return false
 
 	case <-ch[25]:
-		return nil
+		return false
 
 	case <-ch[26]:
-		return nil
+		return false
 
 	case <-ch[27]:
-		return nil
+		return false
 
 	case <-ch[28]:
-		return nil
+		return false
 
 	case <-ch[29]:
-		return nil
+		return false
 
 	case <-ch[30]:
-		return nil
+		return false
 
 	case <-ch[31]:
-		return nil
+		return false
 
-	case <-ctx.Done():
-		return ctx.Err()
+	case <-timeoutCh:
+		return true
 	}
 }

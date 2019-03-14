@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 import { get } from '@ember/object';
 export default Route.extend({
-  repo: service('repository/dc'),
+  repo: service('dc'),
   settings: service('settings'),
   model: function(params) {
     const repo = get(this, 'repo');

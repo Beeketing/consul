@@ -1,11 +1,7 @@
 package structs
 
 import (
-	"fmt"
-	"reflect"
 	"time"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 // IndexedCARoots is the list of currently trusted CA Roots.
@@ -23,20 +19,11 @@ type IndexedCARoots struct {
 	// implement other protocols in future with equivalent semantics. It should be
 	// compared against the "authority" section of a URI (i.e. host:port).
 	//
-	// We need to support migrating a cluster between trust domains to support
-	// Multi-DC migration in Enterprise. In this case the current trust domain is
-	// here but entries in Roots may also have ExternalTrustDomain set to a
-	// non-empty value implying they were previous roots that are still trusted
-	// but under a different trust domain.
-	//
-	// Note that we DON'T validate trust domain during AuthZ since it causes
-	// issues of loss of connectivity during migration between trust domains. The
-	// only time the additional validation adds value is where the cluster shares
-	// an external root (e.g. organization-wide root) with another distinct Consul
-	// cluster or PKI system. In this case, x509 Name Constraints can be added to
-	// enforce that Consul's CA can only validly sign or trust certs within the
-	// same trust-domain. Name constraints as enforced by TLS handshake also allow
-	// seamless rotation between trust domains thanks to cross-signing.
+	// NOTE(banks): Later we may support explicitly trusting external domains
+	// which may be encoded into the CARoot struct or a separate list but this
+	// domain identifier should be immutable and cluster-wide so deserves to be at
+	// the root of this response rather than duplicated through all CARoots that
+	// are not externally trusted entities.
 	TrustDomain string
 
 	// Roots is a list of root CA certs to trust.
@@ -62,16 +49,6 @@ type CARoot struct {
 	// SigningKeyID is the ID of the public key that corresponds to the
 	// private key used to sign the certificate.
 	SigningKeyID string
-
-	// ExternalTrustDomain is the trust domain this root was generated under. It
-	// is usually empty implying "the current cluster trust-domain". It is set
-	// only in the case that a cluster changes trust domain and then all old roots
-	// that are still trusted have the old trust domain set here.
-	//
-	// We currently DON'T validate these trust domains explicitly anywhere, see
-	// IndexedRoots.TrustDomain doc. We retain this information for debugging and
-	// future flexibility.
-	ExternalTrustDomain string
 
 	// Time validity bounds.
 	NotBefore time.Time
@@ -215,55 +192,7 @@ type CAConfiguration struct {
 	RaftIndex
 }
 
-func (c *CAConfiguration) GetCommonConfig() (*CommonCAProviderConfig, error) {
-	if c == nil {
-		return nil, fmt.Errorf("config map was nil")
-	}
-
-	var config CommonCAProviderConfig
-	decodeConf := &mapstructure.DecoderConfig{
-		DecodeHook:       ParseDurationFunc(),
-		Result:           &config,
-		WeaklyTypedInput: true,
-	}
-
-	decoder, err := mapstructure.NewDecoder(decodeConf)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := decoder.Decode(c.Config); err != nil {
-		return nil, fmt.Errorf("error decoding config: %s", err)
-	}
-
-	return &config, nil
-}
-
-type CommonCAProviderConfig struct {
-	LeafCertTTL time.Duration
-
-	SkipValidate bool
-}
-
-func (c CommonCAProviderConfig) Validate() error {
-	if c.SkipValidate {
-		return nil
-	}
-
-	if c.LeafCertTTL < time.Hour {
-		return fmt.Errorf("leaf cert TTL must be greater than 1h")
-	}
-
-	if c.LeafCertTTL > 365*24*time.Hour {
-		return fmt.Errorf("leaf cert TTL must be less than 1 year")
-	}
-
-	return nil
-}
-
 type ConsulCAProviderConfig struct {
-	CommonCAProviderConfig `mapstructure:",squash"`
-
 	PrivateKey     string
 	RootCert       string
 	RotationPeriod time.Duration
@@ -271,61 +200,16 @@ type ConsulCAProviderConfig struct {
 
 // CAConsulProviderState is used to track the built-in Consul CA provider's state.
 type CAConsulProviderState struct {
-	ID               string
-	PrivateKey       string
-	RootCert         string
-	IntermediateCert string
+	ID         string
+	PrivateKey string
+	RootCert   string
 
 	RaftIndex
 }
 
 type VaultCAProviderConfig struct {
-	CommonCAProviderConfig `mapstructure:",squash"`
-
 	Address             string
 	Token               string
 	RootPKIPath         string
 	IntermediatePKIPath string
-}
-
-// ParseDurationFunc is a mapstructure hook for decoding a string or
-// []uint8 into a time.Duration value.
-func ParseDurationFunc() mapstructure.DecodeHookFunc {
-	return func(
-		f reflect.Type,
-		t reflect.Type,
-		data interface{}) (interface{}, error) {
-		var v time.Duration
-		if t != reflect.TypeOf(v) {
-			return data, nil
-		}
-
-		switch {
-		case f.Kind() == reflect.String:
-			if dur, err := time.ParseDuration(data.(string)); err != nil {
-				return nil, err
-			} else {
-				v = dur
-			}
-			return v, nil
-		case f == reflect.SliceOf(reflect.TypeOf(uint8(0))):
-			s := Uint8ToString(data.([]uint8))
-			if dur, err := time.ParseDuration(s); err != nil {
-				return nil, err
-			} else {
-				v = dur
-			}
-			return v, nil
-		default:
-			return data, nil
-		}
-	}
-}
-
-func Uint8ToString(bs []uint8) string {
-	b := make([]byte, len(bs))
-	for i, v := range bs {
-		b[i] = byte(v)
-	}
-	return string(b)
 }

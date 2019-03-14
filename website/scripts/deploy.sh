@@ -151,6 +151,9 @@ if [ -z "$NO_REDIRECTS" ] || [ ! test -f "./redirects.txt" ]; then
 
     # Post the JSON body
     curl \
+      --fail \
+      --silent \
+      --output /dev/null \
       --request "PATCH" \
       --header "Fastly-Key: $FASTLY_API_KEY" \
       --header "Content-type: application/json" \
@@ -164,6 +167,9 @@ fi
 if [ -z "$NO_PURGE" ]; then
   echo "Purging Fastly cache..."
   curl \
+    --fail \
+    --silent \
+    --output /dev/null \
     --request "POST" \
     --header "Accept: application/json" \
     --header "Fastly-Key: $FASTLY_API_KEY" \

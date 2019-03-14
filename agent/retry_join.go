@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/consul/lib"
 	discover "github.com/hashicorp/go-discover"
-	discoverk8s "github.com/hashicorp/go-discover/provider/k8s"
 )
 
 func (a *Agent) retryJoinLAN() {
@@ -69,17 +68,7 @@ func (r *retryJoiner) retryJoin() error {
 		return nil
 	}
 
-	// Copy the default providers, and then add the non-default
-	providers := make(map[string]discover.Provider)
-	for k, v := range discover.Providers {
-		providers[k] = v
-	}
-	providers["k8s"] = &discoverk8s.Provider{}
-
-	disco, err := discover.New(
-		discover.WithUserAgent(lib.UserAgent()),
-		discover.WithProviders(providers),
-	)
+	disco, err := discover.New(discover.WithUserAgent(lib.UserAgent()))
 	if err != nil {
 		return err
 	}

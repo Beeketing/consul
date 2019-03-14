@@ -3,15 +3,15 @@
 package process
 
 import (
-	"context"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"syscall"
 
-	"golang.org/x/sys/unix"
+	"github.com/shirou/gopsutil/internal/common"
 )
 
 // POSIX
@@ -26,9 +26,6 @@ func getTerminalMap() (map[uint64]string, error) {
 	defer d.Close()
 
 	devnames, err := d.Readdirnames(-1)
-	if err != nil {
-		return nil, err
-	}
 	for _, devname := range devnames {
 		if strings.HasPrefix(devname, "/dev/tty") {
 			termfiles = append(termfiles, "/dev/tty/"+devname)
@@ -43,14 +40,9 @@ func getTerminalMap() (map[uint64]string, error) {
 			return nil, err
 		}
 	}
-	defer ptsd.Close()
-
 	if ptsnames == nil {
 		defer ptsd.Close()
 		ptsnames, err = ptsd.Readdirnames(-1)
-		if err != nil {
-			return nil, err
-		}
 		for _, ptsname := range ptsnames {
 			termfiles = append(termfiles, "/dev/pts/"+ptsname)
 		}
@@ -59,8 +51,8 @@ func getTerminalMap() (map[uint64]string, error) {
 	}
 
 	for _, name := range termfiles {
-		stat := unix.Stat_t{}
-		if err = unix.Stat(name, &stat); err != nil {
+		stat := syscall.Stat_t{}
+		if err = syscall.Stat(name, &stat); err != nil {
 			return nil, err
 		}
 		rdev := uint64(stat.Rdev)
@@ -69,19 +61,31 @@ func getTerminalMap() (map[uint64]string, error) {
 	return ret, nil
 }
 
-// SendSignal sends a unix.Signal to the process.
+// SendSignal sends a syscall.Signal to the process.
 // Currently, SIGSTOP, SIGCONT, SIGTERM and SIGKILL are supported.
 func (p *Process) SendSignal(sig syscall.Signal) error {
-	return p.SendSignalWithContext(context.Background(), sig)
-}
+	sigAsStr := "INT"
+	switch sig {
+	case syscall.SIGSTOP:
+		sigAsStr = "STOP"
+	case syscall.SIGCONT:
+		sigAsStr = "CONT"
+	case syscall.SIGTERM:
+		sigAsStr = "TERM"
+	case syscall.SIGKILL:
+		sigAsStr = "KILL"
+	}
 
-func (p *Process) SendSignalWithContext(ctx context.Context, sig syscall.Signal) error {
-	process, err := os.FindProcess(int(p.Pid))
+	kill, err := exec.LookPath("kill")
 	if err != nil {
 		return err
 	}
-
-	err = process.Signal(sig)
+	cmd := exec.Command(kill, "-s", sigAsStr, strconv.Itoa(int(p.Pid)))
+	cmd.Stderr = os.Stderr
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	err = common.WaitTimeout(cmd, common.Timeout)
 	if err != nil {
 		return err
 	}
@@ -91,46 +95,26 @@ func (p *Process) SendSignalWithContext(ctx context.Context, sig syscall.Signal)
 
 // Suspend sends SIGSTOP to the process.
 func (p *Process) Suspend() error {
-	return p.SuspendWithContext(context.Background())
-}
-
-func (p *Process) SuspendWithContext(ctx context.Context) error {
-	return p.SendSignal(unix.SIGSTOP)
+	return p.SendSignal(syscall.SIGSTOP)
 }
 
 // Resume sends SIGCONT to the process.
 func (p *Process) Resume() error {
-	return p.ResumeWithContext(context.Background())
-}
-
-func (p *Process) ResumeWithContext(ctx context.Context) error {
-	return p.SendSignal(unix.SIGCONT)
+	return p.SendSignal(syscall.SIGCONT)
 }
 
 // Terminate sends SIGTERM to the process.
 func (p *Process) Terminate() error {
-	return p.TerminateWithContext(context.Background())
-}
-
-func (p *Process) TerminateWithContext(ctx context.Context) error {
-	return p.SendSignal(unix.SIGTERM)
+	return p.SendSignal(syscall.SIGTERM)
 }
 
 // Kill sends SIGKILL to the process.
 func (p *Process) Kill() error {
-	return p.KillWithContext(context.Background())
-}
-
-func (p *Process) KillWithContext(ctx context.Context) error {
-	return p.SendSignal(unix.SIGKILL)
+	return p.SendSignal(syscall.SIGKILL)
 }
 
 // Username returns a username of the process.
 func (p *Process) Username() (string, error) {
-	return p.UsernameWithContext(context.Background())
-}
-
-func (p *Process) UsernameWithContext(ctx context.Context) (string, error) {
 	uids, err := p.Uids()
 	if err != nil {
 		return "", err

@@ -1,5 +1,4 @@
 // prettier-ignore
-/* istanbul ignore file */
 export default function(JSON) {
   // Has to be a property on an object so babel knocks the indentation in
   return {

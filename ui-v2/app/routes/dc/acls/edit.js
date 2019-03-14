@@ -6,7 +6,7 @@ import { get } from '@ember/object';
 import WithAclActions from 'consul-ui/mixins/acl/with-actions';
 
 export default Route.extend(WithAclActions, {
-  repo: service('repository/acl'),
+  repo: service('acls'),
   settings: service('settings'),
   model: function(params) {
     return hash({

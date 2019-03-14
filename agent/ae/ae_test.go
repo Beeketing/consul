@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/consul/lib"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestAE_scaleFactor(t *testing.T) {
@@ -48,16 +47,14 @@ func TestAE_Pause_nestedPauseResume(t *testing.T) {
 	if l.Paused() != true {
 		t.Fatal("syncer should STILL be Paused after second call to Pause()")
 	}
-	gotR := l.Resume()
+	l.Resume()
 	if l.Paused() != true {
 		t.Fatal("syncer should STILL be Paused after FIRST call to Resume()")
 	}
-	assert.False(t, gotR)
-	gotR = l.Resume()
+	l.Resume()
 	if l.Paused() != false {
 		t.Fatal("syncer should NOT be Paused after SECOND call to Resume()")
 	}
-	assert.True(t, gotR)
 
 	defer func() {
 		err := recover()

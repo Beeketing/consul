@@ -40,13 +40,6 @@ func testRegisterNode(t *testing.T, s *Store, idx uint64, nodeID string) {
 	testRegisterNodeWithMeta(t, s, idx, nodeID, nil)
 }
 
-// testRegisterNodeWithChange registers a node and ensures it gets different from previous registration
-func testRegisterNodeWithChange(t *testing.T, s *Store, idx uint64, nodeID string) {
-	testRegisterNodeWithMeta(t, s, idx, nodeID, map[string]string{
-		"version": string(idx),
-	})
-}
-
 func testRegisterNodeWithMeta(t *testing.T, s *Store, idx uint64, nodeID string, meta map[string]string) {
 	node := &structs.Node{Node: nodeID, Meta: meta}
 	if err := s.EnsureNode(idx, node); err != nil {
@@ -64,20 +57,12 @@ func testRegisterNodeWithMeta(t *testing.T, s *Store, idx uint64, nodeID string,
 	}
 }
 
-// testRegisterServiceWithChange registers a service and allow ensuring the consul index is updated
-// even if service already exists if using `modifyAccordingIndex`.
-// This is done by setting the transation ID in "version" meta so service will be updated if it already exists
-func testRegisterServiceWithChange(t *testing.T, s *Store, idx uint64, nodeID, serviceID string, modifyAccordingIndex bool) {
-	meta := make(map[string]string)
-	if modifyAccordingIndex {
-		meta["version"] = string(idx)
-	}
+func testRegisterService(t *testing.T, s *Store, idx uint64, nodeID, serviceID string) {
 	svc := &structs.NodeService{
 		ID:      serviceID,
 		Service: serviceID,
 		Address: "1.1.1.1",
 		Port:    1111,
-		Meta:    meta,
 	}
 	if err := s.EnsureService(idx, nodeID, svc); err != nil {
 		t.Fatalf("err: %s", err)
@@ -94,14 +79,6 @@ func testRegisterServiceWithChange(t *testing.T, s *Store, idx uint64, nodeID, s
 		result.ServiceID != serviceID {
 		t.Fatalf("bad service: %#v", result)
 	}
-}
-
-// testRegisterService register a service with given transation idx
-// If the service already exists, transaction number might not be increased
-// Use `testRegisterServiceWithChange()` if you want perform a registration that
-// ensures the transaction is updated by setting idx in Meta of Service
-func testRegisterService(t *testing.T, s *Store, idx uint64, nodeID, serviceID string) {
-	testRegisterServiceWithChange(t, s, idx, nodeID, serviceID, false)
 }
 
 func testRegisterCheck(t *testing.T, s *Store, idx uint64,

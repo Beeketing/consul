@@ -5,13 +5,13 @@ import { get, set } from '@ember/object';
 
 import distance from 'consul-ui/utils/distance';
 import tomographyFactory from 'consul-ui/utils/tomography';
-import WithBlockingActions from 'consul-ui/mixins/with-blocking-actions';
+import WithFeedback from 'consul-ui/mixins/with-feedback';
 
 const tomography = tomographyFactory(distance);
 
-export default Route.extend(WithBlockingActions, {
-  repo: service('repository/node'),
-  sessionRepo: service('repository/session'),
+export default Route.extend(WithFeedback, {
+  repo: service('nodes'),
+  sessionRepo: service('session'),
   queryParams: {
     s: {
       as: 'filter',
@@ -49,14 +49,18 @@ export default Route.extend(WithBlockingActions, {
       const dc = this.modelFor('dc').dc.Name;
       const controller = this.controller;
       const repo = get(this, 'sessionRepo');
-      return get(this, 'feedback').execute(() => {
-        const node = get(item, 'Node');
-        return repo.remove(item).then(() => {
-          return repo.findByNode(node, dc).then(function(sessions) {
-            set(controller, 'sessions', sessions);
+      get(this, 'feedback').execute(
+        () => {
+          const node = get(item, 'Node');
+          return repo.remove(item).then(() => {
+            return repo.findByNode(node, dc).then(function(sessions) {
+              set(controller, 'sessions', sessions);
+            });
           });
-        });
-      }, 'delete');
+        },
+        `The session was invalidated.`,
+        `There was an error invalidating the session.`
+      );
     },
   },
 });

@@ -14,7 +14,6 @@ import (
 	ca "github.com/hashicorp/consul/agent/connect/ca"
 	"github.com/hashicorp/consul/agent/structs"
 	"github.com/hashicorp/consul/testrpc"
-	"github.com/hashicorp/consul/testutil/retry"
 	"github.com/hashicorp/net-rpc-msgpackrpc"
 	"github.com/stretchr/testify/assert"
 )
@@ -39,7 +38,7 @@ func TestConnectCARoots(t *testing.T) {
 	codec := rpcClient(t, s1)
 	defer codec.Close()
 
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	// Insert some CAs
 	state := s1.fsm.State()
@@ -82,7 +81,7 @@ func TestConnectCAConfig_GetSet(t *testing.T) {
 	codec := rpcClient(t, s1)
 	defer codec.Close()
 
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	// Get the starting config
 	{
@@ -115,9 +114,8 @@ func TestConnectCAConfig_GetSet(t *testing.T) {
 			Config:     newConfig,
 		}
 		var reply interface{}
-		retry.Run(t, func(r *retry.R) {
-			r.Check(msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
-		})
+
+		assert.NoError(msgpackrpc.CallWithCodec(codec, "ConnectCA.ConfigurationSet", args, &reply))
 	}
 
 	// Verify the new config was set
@@ -148,7 +146,7 @@ func TestConnectCAConfig_TriggerRotation(t *testing.T) {
 	codec := rpcClient(t, s1)
 	defer codec.Close()
 
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	// Store the current root
 	rootReq := &structs.DCSpecificRequest{
@@ -341,7 +339,6 @@ func TestConnectCASignValidation(t *testing.T) {
 
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 	})
@@ -360,7 +357,7 @@ func TestConnectCASignValidation(t *testing.T) {
 			Op:         structs.ACLSet,
 			ACL: structs.ACL{
 				Name: "User token",
-				Type: structs.ACLTokenTypeClient,
+				Type: structs.ACLTypeClient,
 				Rules: `
 				service "web" {
 					policy = "write"

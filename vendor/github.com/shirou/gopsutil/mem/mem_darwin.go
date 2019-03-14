@@ -3,22 +3,21 @@
 package mem
 
 import (
-	"context"
 	"encoding/binary"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/shirou/gopsutil/internal/common"
-	"golang.org/x/sys/unix"
 )
 
 func getHwMemsize() (uint64, error) {
-	totalString, err := unix.Sysctl("hw.memsize")
+	totalString, err := syscall.Sysctl("hw.memsize")
 	if err != nil {
 		return 0, err
 	}
 
-	// unix.sysctl() helpfully assumes the result is a null-terminated string and
+	// syscall.sysctl() helpfully assumes the result is a null-terminated string and
 	// removes the last byte of the result if it's 0 :/
 	totalString += "\x00"
 
@@ -29,13 +28,9 @@ func getHwMemsize() (uint64, error) {
 
 // SwapMemory returns swapinfo.
 func SwapMemory() (*SwapMemoryStat, error) {
-	return SwapMemoryWithContext(context.Background())
-}
-
-func SwapMemoryWithContext(ctx context.Context) (*SwapMemoryStat, error) {
 	var ret *SwapMemoryStat
 
-	swapUsage, err := common.DoSysctrlWithContext(ctx, "vm.swapusage")
+	swapUsage, err := common.DoSysctrl("vm.swapusage")
 	if err != nil {
 		return ret, err
 	}

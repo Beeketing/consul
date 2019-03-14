@@ -1,53 +1,66 @@
-@import '../layouts/index';
-
-// TODO: This shouldn't be done here, decide the best way to do this
-// %main-decoration ? %main-skin ? %content-skin ?
-// it includes layouts of components, but not layout of itself?
-// %main-components? What about %app-content
-main,
-%modal-window {
-  @extend %main-content;
-}
 html.template-with-vertical-menu,
 html.template-with-vertical-menu body {
   overflow: hidden;
 }
 #wrapper {
-  @extend %viewport-container;
+  margin: 0 auto;
+  position: static;
+  max-width: 1260px;
+  padding: 0 1.9047619047619049%; // 24px
+  padding: 0 1.9047619047619049vw; // 24px
+  width: auto; // stop bulma jumping around
+
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
-#wrapper {
-  @extend %with-sticky-footer;
+@media #{$--min-padding} {
+  #wrapper {
+    padding: 0 10px;
+  }
+  main,
+  #wrapper > footer {
+    padding: 0 33px;
+  }
+}
+@media #{$--max-padding} {
+  #wrapper {
+    padding: 0 24px;
+  }
+  main,
+  #wrapper > footer {
+    padding: 0 33px;
+  }
 }
 main {
-  @extend %with-sticky-footer-content;
+  max-width: 1150px;
 }
 main,
 #wrapper > footer {
-  @extend %content-container;
+  padding: 0 2.619047619047619%; //33px;
+  padding: 0 1.9047619047619049vw;
 }
-html.template-edit main {
-  @extend %content-container-restricted;
+main {
+  flex: 1;
 }
-
-@media #{$--lt-spacious-page-header} {
-  html.template-list:not(.template-kv) main {
-    margin-top: 10px;
-  }
+// workaround bulma's sweeping box-sizing
+#wrapper {
+  box-sizing: content-box;
 }
-@media #{$--lt-spacious-page-header} {
-  .actions button.copy-btn {
-    margin-top: -56px;
-    padding: 0;
-  }
+main > * {
+  box-sizing: border-box;
 }
-/* TODO: keep margin below forms, move elsewhere */
-%main-content form,
-%main-content form + div .with-confirmation {
-  margin-bottom: 2em;
+main p {
+  margin-bottom: 1em;
 }
-@media #{$--lt-wide-form} {
-  main form [type='reset'] {
-    float: right;
-    margin-right: 0 !important;
-  }
+html body > svg {
+  display: none;
+  position: absolute;
+  top: 50%;
+  margin-top: -26px;
+  left: 50%;
+  margin-left: -84px;
+}
+html.ember-loading body > svg {
+  display: block;
 }

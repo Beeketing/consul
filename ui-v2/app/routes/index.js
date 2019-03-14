@@ -4,7 +4,7 @@ import { hash } from 'rsvp';
 import { get } from '@ember/object';
 
 export default Route.extend({
-  repo: service('repository/dc'),
+  repo: service('dc'),
   model: function(params) {
     return hash({
       item: get(this, 'repo').getActive(),

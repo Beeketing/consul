@@ -347,7 +347,6 @@ func TestInternal_EventFire_Token(t *testing.T) {
 	t.Parallel()
 	dir, srv := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDownPolicy = "deny"
 		c.ACLDefaultPolicy = "deny"

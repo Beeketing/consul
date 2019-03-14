@@ -140,7 +140,6 @@ func TestSession_Apply_ACLDeny(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
@@ -158,7 +157,7 @@ func TestSession_Apply_ACLDeny(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 session "foo" {
 	policy = "write"
@@ -332,7 +331,6 @@ func TestSession_Get_List_NodeSessions_ACLFilter(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
@@ -350,7 +348,7 @@ func TestSession_Get_List_NodeSessions_ACLFilter(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 session "foo" {
 	policy = "read"
@@ -503,9 +501,10 @@ func TestSession_ApplyTimers(t *testing.T) {
 	dir1, s1 := testServer(t)
 	defer os.RemoveAll(dir1)
 	defer s1.Shutdown()
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
 	codec := rpcClient(t, s1)
 	defer codec.Close()
+
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	s1.fsm.State().EnsureNode(1, &structs.Node{Node: "foo", Address: "127.0.0.1"})
 	arg := structs.SessionRequest{
@@ -540,9 +539,8 @@ func TestSession_ApplyTimers(t *testing.T) {
 }
 
 func TestSession_Renew(t *testing.T) {
-	// This method is timing sensitive, disable Parallel
-	//t.Parallel()
-	ttl := 1 * time.Second
+	t.Parallel()
+	ttl := time.Second
 	TTL := ttl.String()
 
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
@@ -550,9 +548,10 @@ func TestSession_Renew(t *testing.T) {
 	})
 	defer os.RemoveAll(dir1)
 	defer s1.Shutdown()
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
 	codec := rpcClient(t, s1)
 	defer codec.Close()
+
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	s1.fsm.State().EnsureNode(1, &structs.Node{Node: "foo", Address: "127.0.0.1"})
 	ids := []string{}
@@ -707,16 +706,16 @@ func TestSession_Renew_ACLDeny(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
 	})
 	defer os.RemoveAll(dir1)
 	defer s1.Shutdown()
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
 	codec := rpcClient(t, s1)
 	defer codec.Close()
+
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	// Create the ACL.
 	req := structs.ACLRequest{
@@ -724,7 +723,7 @@ func TestSession_Renew_ACLDeny(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 session "foo" {
 	policy = "write"

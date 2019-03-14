@@ -3,8 +3,8 @@ import { moduleFor, test } from 'ember-qunit';
 moduleFor('route:dc/nodes/show', 'Unit | Route | dc/nodes/show', {
   // Specify the other units that are required for this test.
   needs: [
-    'service:repository/node',
-    'service:repository/session',
+    'service:nodes',
+    'service:session',
     'service:feedback',
     'service:logger',
     'service:flashMessages',

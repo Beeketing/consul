@@ -26,6 +26,10 @@ such as Kubernetes or Nomad. Additionally, intention enforcement can be done
 regardless of the underlying network, so Connect works with physical networks,
 cloud networks, software-defined networks, cross-cloud, and more.
 
+-> **Beta:** Connect was introduced in Consul 1.2 and should be considered
+beta quality. We're working hard to quickly address any reported bugs and
+we hope to be remove the beta tag before the end of 2018.
+
 ## How it Works
 
 The core of Connect is based on [mutual TLS](https://en.wikipedia.org/wiki/Mutual_authentication).
@@ -65,23 +69,6 @@ local caching, background updating, and support blocking queries. As a result,
 most API calls operate on purely local in-memory data and can respond
 in microseconds.
 
-## Getting Started With Connect
-
-There are several ways to try Connect in different environments.
-
- * The [Connect introduction](https://learn.hashicorp.com/consul/getting-started/connect) in the
-   Getting Started guide provides a simple walk through of getting two services
-   to communicate via Connect using only Consul directly on your local machine.
-
- * The [Envoy guide](/docs/guides/connect-envoy.html) walks through getting
-   started with Envoy as a proxy, and uses Docker to run components locally
-   without installing anything else.
-
- * The [Kubernetes documentation](/docs/platform/k8s/run.html) shows how to get
-   from an empty Kubernetes cluster to having Consul installed and Envoy
-   configured to proxy application traffic automatically using the official helm
-   chart.
-
 ## Agent Caching and Performance
 
 To enable microsecond-speed responses on
@@ -120,15 +107,15 @@ a long period of inactivity (3 days by default), the cache will empty itself.
 
 ## Multi-Datacenter
 
-Using Connect for service-to-service communications across multiple datacenters 
-requires Consul Enterprise. 
-
-With Open Source Consul, Connect may be enabled on multiple Consul datacenters, 
-but only services within the same datacenter can establish Connect-based, 
-Authenticated and Authorized connections. In this version, Certificate Authority
-configurations and intentions are both local to their respective datacenters; 
+Connect currently only works for service-to-service connections wtihin a
+single Consul datacenter. Connect may be enabled on multiple Consul datacenters,
+but only services within the same datacenters can establish Connect-based
+connections.
+CA configurations and intentions are both local to their respective datacenters;
 they are not replicated across datacenters.
 
-Full multi-datacenter support for Connect is available in
-[Consul Enterprise](/docs/enterprise/connect-multi-datacenter/index.html).
+Multi-datacenter support for Connect is under development and will be
+released as a feature of Consul Enterprise in late 2018. This feature will
+facilitate intention replication, datacenter constraints on intentions,
+CA state replication, multi-datacenter certificate rotations, and more.
 

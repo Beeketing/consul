@@ -21,13 +21,12 @@ node and may be associated with any number of checks.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes | Agent Caching | ACL Required    |
-| ---------------- | ----------------- | ------------- | --------------- |
-| `NO`             | `none`            | `none`        | `session:write` |
+| Blocking Queries | Consistency Modes | ACL Required    |
+| ---------------- | ----------------- | --------------- |
+| `NO`             | `none`            | `session:write` |
 
 ### Parameters
 
@@ -43,8 +42,8 @@ The table below shows this endpoint's support for
 - `Name` `(string: "")` - Specifies a human-readable name for the session.
 
 - `Checks` `(array<string>: nil)` - specifies a list of associated health
-  check IDs (commonly `CheckID` in API responses). It is highly recommended that,
-  if you override this list, you include the default `serfHealth`.
+  checks. It is highly recommended that, if you override this list, you include
+  the default `serfHealth`.
 
 - `Behavior` `(string: "release")` - Controls the behavior to take when a
   session is invalidated. Valid values are:
@@ -78,7 +77,7 @@ The table below shows this endpoint's support for
 $ curl \
     --request PUT \
     --data @payload.json \
-    http://127.0.0.1:8500/v1/session/create
+    https://consul.rocks/v1/session/create
 ```
 
 ### Sample Response
@@ -107,13 +106,12 @@ successful.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes | Agent Caching | ACL Required    |
-| ---------------- | ----------------- | ------------- | --------------- |
-| `NO`             | `none`            | `none`        | `session:write` |
+| Blocking Queries | Consistency Modes | ACL Required    |
+| ---------------- | ----------------- | --------------- |
+| `NO`             | `none`            | `session:write` |
 
 ### Parameters
 
@@ -129,7 +127,7 @@ The table below shows this endpoint's support for
 ```text
 $ curl \
     --request PUT
-    http://127.0.0.1:8500/v1/session/destroy/adf4238a-882b-9ddc-4a9d-5b6758e4159e
+    https://consul.rocks/v1/session/destroy/adf4238a-882b-9ddc-4a9d-5b6758e4159e
 ```
 
 ### Sample Response
@@ -148,13 +146,12 @@ This endpoint returns the requested session information.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes | Agent Caching | ACL Required   |
-| ---------------- | ----------------- | ------------- | -------------- |
-| `YES`            | `all`             | `none`        | `session:read` |
+| Blocking Queries | Consistency Modes | ACL Required   |
+| ---------------- | ----------------- | -------------- |
+| `YES`            | `all`             | `session:read` |
 
 ### Parameters
 
@@ -169,7 +166,7 @@ The table below shows this endpoint's support for
 
 ```text
 $ curl \
-    http://127.0.0.1:8500/v1/session/info/adf4238a-882b-9ddc-4a9d-5b6758e4159e
+    https://consul.rocks/v1/session/info/adf4238a-882b-9ddc-4a9d-5b6758e4159e
 ```
 
 ### Sample Response
@@ -177,17 +174,13 @@ $ curl \
 ```json
 [
   {
-    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
-    "Name": "test-session",
-    "Node": "raja-laptop-02",    
+    "LockDelay": 1.5e+10,
     "Checks": [
       "serfHealth"
     ],
-    "LockDelay": 1.5e+10,
-    "Behavior": "release",
-    "TTL": "30s",
-    "CreateIndex": 1086449,
-    "ModifyIndex": 1086449
+    "Node": "foobar",
+    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
+    "CreateIndex": 1086449
   }
 ]
 ```
@@ -204,13 +197,12 @@ This endpoint returns the active sessions for a given node.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes | Agent Caching | ACL Required   |
-| ---------------- | ----------------- | ------------- | -------------- |
-| `YES`            | `all`             | `none`        | `session:read` |
+| Blocking Queries | Consistency Modes | ACL Required   |
+| ---------------- | ----------------- | -------------- |
+| `YES`            | `all`             | `session:read` |
 
 ### Parameters
 
@@ -225,7 +217,7 @@ The table below shows this endpoint's support for
 
 ```text
 $ curl \
-    http://127.0.0.1:8500/v1/session/node/node-abcd1234
+    https://consul.rocks/v1/session/node/node-abcd1234
 ```
 
 ### Sample Response
@@ -233,18 +225,14 @@ $ curl \
 ```json
 [
   {
-    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
-    "Name": "test-session",
-    "Node": "raja-laptop-02",    
+    "LockDelay": 1.5e+10,
     "Checks": [
       "serfHealth"
     ],
-    "LockDelay": 1.5e+10,
-    "Behavior": "release",
-    "TTL": "30s",
-    "CreateIndex": 1086449,
-    "ModifyIndex": 1086449
-  }
+    "Node": "foobar",
+    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
+    "CreateIndex": 1086449
+  },
 ]
 ```
 
@@ -258,13 +246,12 @@ This endpoint returns the list of active sessions.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes | Agent Caching | ACL Required   |
-| ---------------- | ----------------- | ------------- | -------------- |
-| `YES`            | `all`             | `none`        | `session:read` |
+| Blocking Queries | Consistency Modes | ACL Required   |
+| ---------------- | ----------------- | -------------- |
+| `YES`            | `all`             | `session:read` |
 
 ### Parameters
 
@@ -276,7 +263,7 @@ The table below shows this endpoint's support for
 
 ```text
 $ curl \
-    http://127.0.0.1:8500/v1/session/list
+    https://consul.rocks/v1/session/list
 ```
 
 ### Sample Response
@@ -284,18 +271,14 @@ $ curl \
 ```json
 [
   {
-    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
-    "Name": "test-session",
-    "Node": "raja-laptop-02",    
+    "LockDelay": 1.5e+10,
     "Checks": [
       "serfHealth"
     ],
-    "LockDelay": 1.5e+10,
-    "Behavior": "release",
-    "TTL": "30s",
-    "CreateIndex": 1086449,
-    "ModifyIndex": 1086449
-  }
+    "Node": "foobar",
+    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
+    "CreateIndex": 1086449
+  },
 ]
 ```
 
@@ -310,13 +293,12 @@ TTL, and it extends the expiration by the TTL.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes | Agent Caching | ACL Required    |
-| ---------------- | ----------------- | ------------- | --------------- |
-| `NO`             | `none`            | `none`        | `session:write` |
+| Blocking Queries | Consistency Modes | ACL Required    |
+| ---------------- | ----------------- | --------------- |
+| `NO`             | `none`            | `session:write` |
 
 ### Parameters
 
@@ -332,7 +314,7 @@ The table below shows this endpoint's support for
 ```text
 $ curl \
     --request PUT \
-    http://127.0.0.1:8500/v1/session/renew/adf4238a-882b-9ddc-4a9d-5b6758e4159e
+    https://consul.rocks/v1/session/renew/adf4238a-882b-9ddc-4a9d-5b6758e4159e
 ```
 
 ### Sample Response
@@ -340,17 +322,15 @@ $ curl \
 ```json
 [
   {
-    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
-    "Name": "test-session",
-    "Node": "raja-laptop-02",    
+    "LockDelay": 1.5e+10,
     "Checks": [
       "serfHealth"
     ],
-    "LockDelay": 1.5e+10,
-    "Behavior": "release",
-    "TTL": "15s",
+    "Node": "foobar",
+    "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e",
     "CreateIndex": 1086449,
-    "ModifyIndex": 1086449
+    "Behavior": "release",
+    "TTL": "15s"
   }
 ]
 ```

@@ -4,15 +4,14 @@ package cpu
 
 import (
 	"bytes"
-	"context"
 	"encoding/binary"
 	"fmt"
 	"os/exec"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/shirou/gopsutil/internal/common"
-	"golang.org/x/sys/unix"
 )
 
 // sys/sched.h
@@ -50,10 +49,6 @@ func init() {
 }
 
 func Times(percpu bool) ([]TimesStat, error) {
-	return TimesWithContext(context.Background(), percpu)
-}
-
-func TimesWithContext(ctx context.Context, percpu bool) ([]TimesStat, error) {
 	var ret []TimesStat
 
 	var ncpu int
@@ -101,15 +96,11 @@ func TimesWithContext(ctx context.Context, percpu bool) ([]TimesStat, error) {
 
 // Returns only one (minimal) CPUInfoStat on OpenBSD
 func Info() ([]InfoStat, error) {
-	return InfoWithContext(context.Background())
-}
-
-func InfoWithContext(ctx context.Context) ([]InfoStat, error) {
 	var ret []InfoStat
 
 	c := InfoStat{}
 
-	v, err := unix.Sysctl("hw.model")
+	v, err := syscall.Sysctl("hw.model")
 	if err != nil {
 		return nil, err
 	}

@@ -84,7 +84,6 @@ func TestServiceDefinitionValidate(t *testing.T) {
 		{
 			"managed proxy with no port set",
 			func(x *ServiceDefinition) {
-				x.Port = 0 // Explicitly unset this as the test default sets it sanely
 				x.Connect = &ServiceConnect{
 					Proxy: &ServiceDefinitionConnectProxy{},
 				}
@@ -112,12 +111,13 @@ func TestServiceDefinitionValidate(t *testing.T) {
 			tc.Modify(service)
 
 			err := service.Validate()
-			if tc.Err == "" {
-				require.NoError(err)
-			} else {
-				require.Error(err)
-				require.Contains(strings.ToLower(err.Error()), strings.ToLower(tc.Err))
+			t.Logf("error: %s", err)
+			require.Equal(err != nil, tc.Err != "")
+			if err == nil {
+				return
 			}
+
+			require.Contains(strings.ToLower(err.Error()), strings.ToLower(tc.Err))
 		})
 	}
 }

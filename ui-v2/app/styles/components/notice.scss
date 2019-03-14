@@ -1,10 +1,24 @@
-@import './notice/index';
-.notice.warning {
-  @extend %notice-warning;
+.notice {
+  @extend %notice;
 }
-.notice.info {
-  @extend %notice-info;
+%notice {
+  @extend %with-warning;
 }
-.notice.policy-management {
-  @extend %notice-highlight;
+%notice::before {
+  left: 20px;
+  top: 18px;
+  margin-top: 0;
+}
+%notice {
+  border: 1px solid;
+  border-radius: $radius-small;
+}
+%notice.warning {
+  background-color: $yellow-050;
+  border-color: $yellow-500;
+}
+%notice {
+  position: relative;
+  padding: 1em;
+  padding-left: 45px;
 }

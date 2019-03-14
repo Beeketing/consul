@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/consul/testrpc"
 	"github.com/hashicorp/net-rpc-msgpackrpc"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestHealth_ChecksInState(t *testing.T) {
@@ -603,68 +602,6 @@ func TestHealth_ServiceNodes(t *testing.T) {
 	}
 }
 
-func TestHealth_ServiceNodes_MultipleServiceTags(t *testing.T) {
-	t.Parallel()
-	dir1, s1 := testServer(t)
-	defer os.RemoveAll(dir1)
-	defer s1.Shutdown()
-	codec := rpcClient(t, s1)
-	defer codec.Close()
-
-	testrpc.WaitForLeader(t, s1.RPC, "dc1")
-
-	arg := structs.RegisterRequest{
-		Datacenter: "dc1",
-		Node:       "foo",
-		Address:    "127.0.0.1",
-		Service: &structs.NodeService{
-			ID:      "db",
-			Service: "db",
-			Tags:    []string{"master", "v2"},
-		},
-		Check: &structs.HealthCheck{
-			Name:      "db connect",
-			Status:    api.HealthPassing,
-			ServiceID: "db",
-		},
-	}
-	var out struct{}
-	require.NoError(t, msgpackrpc.CallWithCodec(codec, "Catalog.Register", &arg, &out))
-
-	arg = structs.RegisterRequest{
-		Datacenter: "dc1",
-		Node:       "bar",
-		Address:    "127.0.0.2",
-		Service: &structs.NodeService{
-			ID:      "db",
-			Service: "db",
-			Tags:    []string{"slave", "v2"},
-		},
-		Check: &structs.HealthCheck{
-			Name:      "db connect",
-			Status:    api.HealthWarning,
-			ServiceID: "db",
-		},
-	}
-	require.NoError(t, msgpackrpc.CallWithCodec(codec, "Catalog.Register", &arg, &out))
-
-	var out2 structs.IndexedCheckServiceNodes
-	req := structs.ServiceSpecificRequest{
-		Datacenter:  "dc1",
-		ServiceName: "db",
-		ServiceTags: []string{"master", "v2"},
-		TagFilter:   true,
-	}
-	require.NoError(t, msgpackrpc.CallWithCodec(codec, "Health.ServiceNodes", &req, &out2))
-
-	nodes := out2.Nodes
-	require.Len(t, nodes, 1)
-	require.Equal(t, nodes[0].Node.Node, "foo")
-	require.Contains(t, nodes[0].Service.Tags, "v2")
-	require.Contains(t, nodes[0].Service.Tags, "master")
-	require.Equal(t, nodes[0].Checks[0].Status, api.HealthPassing)
-}
-
 func TestHealth_ServiceNodes_NodeMetaFilter(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServer(t)
@@ -891,7 +828,6 @@ func TestHealth_ServiceNodes_ConnectProxy_ACL(t *testing.T) {
 	assert := assert.New(t)
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
@@ -909,7 +845,7 @@ func TestHealth_ServiceNodes_ConnectProxy_ACL(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 service "foo" {
 	policy = "write"
@@ -929,7 +865,7 @@ service "foo" {
 		args.WriteRequest.Token = "root"
 		args.Service.ID = "foo-proxy-0"
 		args.Service.Service = "foo-proxy"
-		args.Service.Proxy.DestinationServiceName = "bar"
+		args.Service.ProxyDestination = "bar"
 		args.Check = &structs.HealthCheck{
 			Name:      "proxy",
 			Status:    api.HealthPassing,
@@ -941,7 +877,7 @@ service "foo" {
 		args = structs.TestRegisterRequestProxy(t)
 		args.WriteRequest.Token = "root"
 		args.Service.Service = "foo-proxy"
-		args.Service.Proxy.DestinationServiceName = "foo"
+		args.Service.ProxyDestination = "foo"
 		args.Check = &structs.HealthCheck{
 			Name:      "proxy",
 			Status:    api.HealthPassing,
@@ -953,7 +889,7 @@ service "foo" {
 		args = structs.TestRegisterRequestProxy(t)
 		args.WriteRequest.Token = "root"
 		args.Service.Service = "another-proxy"
-		args.Service.Proxy.DestinationServiceName = "foo"
+		args.Service.ProxyDestination = "foo"
 		args.Check = &structs.HealthCheck{
 			Name:      "proxy",
 			Status:    api.HealthPassing,

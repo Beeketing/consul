@@ -9,8 +9,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/testrpc"
-
 	"github.com/hashicorp/consul/agent/structs"
 )
 
@@ -132,7 +130,6 @@ func TestTxnEndpoint_KV_Actions(t *testing.T) {
 	t.Run("", func(t *testing.T) {
 		a := NewTestAgent(t.Name(), "")
 		defer a.Shutdown()
-		testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 		// Make sure all incoming fields get converted properly to the internal
 		// RPC format.

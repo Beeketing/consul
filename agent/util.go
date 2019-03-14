@@ -98,7 +98,7 @@ GROUP:
 func ForwardSignals(cmd *exec.Cmd, logFn func(error), shutdownCh <-chan struct{}) {
 	go func() {
 		signalCh := make(chan os.Signal, 10)
-		signal.Notify(signalCh, forwardSignals...)
+		signal.Notify(signalCh, os.Interrupt, os.Kill)
 		defer signal.Stop(signalCh)
 
 		for {

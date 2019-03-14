@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { get, set } from '@ember/object';
 import { getOwner } from '@ember/application';
 import WithFiltering from 'consul-ui/mixins/with-filtering';
-import qsaFactory from 'consul-ui/utils/dom/qsa-factory';
+import qsaFactory from 'consul-ui/utils/qsa-factory';
 import getComponentFactory from 'consul-ui/utils/get-component-factory';
 
 const $$ = qsaFactory();
@@ -15,12 +15,7 @@ export default Controller.extend(WithFiltering, {
   },
   setProperties: function() {
     this._super(...arguments);
-    // the default selected tab depends on whether you have any healthchecks or not
-    // so check the length here.
-    // This method is called immediately after `Route::setupController`, and done here rather than there
-    // as this is a variable used purely for view level things, if the view was different we might not
-    // need this variable
-    set(this, 'selectedTab', get(this.item, 'Checks.length') > 0 ? 'health-checks' : 'services');
+    set(this, 'selectedTab', 'health-checks');
   },
   filter: function(item, { s = '' }) {
     const term = s.toLowerCase();
@@ -28,12 +23,6 @@ export default Controller.extend(WithFiltering, {
       get(item, 'Service')
         .toLowerCase()
         .indexOf(term) !== -1 ||
-      get(item, 'ID')
-        .toLowerCase()
-        .indexOf(term) !== -1 ||
-      (get(item, 'Tags') || []).some(function(item) {
-        return item.toLowerCase().indexOf(term) !== -1;
-      }) ||
       get(item, 'Port')
         .toString()
         .toLowerCase()

@@ -64,9 +64,9 @@ type followerReplication struct {
 	// notifyCh is notified to send out a heartbeat, which is used to check that
 	// this server is still leader.
 	notifyCh chan struct{}
-	// notify is a map of futures to be resolved upon receipt of an
-	// acknowledgement, then cleared from this map.
-	notify map[*verifyFuture]struct{}
+	// notify is a list of futures to be resolved upon receipt of an
+	// acknowledgement, then cleared from this list.
+	notify []*verifyFuture
 	// notifyLock protects 'notify'.
 	notifyLock sync.Mutex
 
@@ -85,20 +85,13 @@ func (s *followerReplication) notifyAll(leader bool) {
 	// Clear the waiting notifies minimizing lock time
 	s.notifyLock.Lock()
 	n := s.notify
-	s.notify = make(map[*verifyFuture]struct{})
+	s.notify = nil
 	s.notifyLock.Unlock()
 
 	// Submit our votes
-	for v, _ := range n {
+	for _, v := range n {
 		v.vote(leader)
 	}
-}
-
-// cleanNotify is used to delete notify, .
-func (s *followerReplication) cleanNotify(v *verifyFuture) {
-	s.notifyLock.Lock()
-	delete(s.notify, v)
-	s.notifyLock.Unlock()
 }
 
 // LastContact returns the time of last contact.

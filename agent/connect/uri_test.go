@@ -1,6 +1,7 @@
 package connect
 
 import (
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -56,13 +57,17 @@ var testCertURICases = []struct {
 	},
 }
 
-func TestParseCertURIFromString(t *testing.T) {
+func TestParseCertURI(t *testing.T) {
 	for _, tc := range testCertURICases {
 		t.Run(tc.Name, func(t *testing.T) {
 			assert := assert.New(t)
 
+			// Parse the URI, should always be valid
+			uri, err := url.Parse(tc.URI)
+			assert.Nil(err)
+
 			// Parse the ID and check the error/return value
-			actual, err := ParseCertURIFromString(tc.URI)
+			actual, err := ParseCertURI(uri)
 			if err != nil {
 				t.Logf("parse error: %s", err.Error())
 			}

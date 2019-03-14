@@ -6,8 +6,6 @@ import (
 	"encoding/pem"
 	"testing"
 
-	"github.com/hashicorp/consul/testrpc"
-
 	"github.com/hashicorp/consul/agent"
 	"github.com/hashicorp/consul/agent/connect"
 	"github.com/hashicorp/consul/api"
@@ -27,14 +25,6 @@ func Test_verifyServerCertMatchesURI(t *testing.T) {
 			name:     "simple match",
 			certs:    TestPeerCertificates(t, "web", ca1),
 			expected: connect.TestSpiffeIDService(t, "web"),
-			wantErr:  false,
-		},
-		{
-			// Could happen during migration of secondary DC to multi-DC. Trust domain
-			// validity is enforced with x509 name constraints where needed.
-			name:     "different trust-domain allowed",
-			certs:    TestPeerCertificates(t, "web", ca1),
-			expected: connect.TestSpiffeIDServiceWithHost(t, "web", "other.consul"),
 			wantErr:  false,
 		},
 		{
@@ -153,7 +143,6 @@ func TestServerSideVerifier(t *testing.T) {
 	// Setup a local test agent to query
 	agent := agent.NewTestAgent("test-consul", "")
 	defer agent.Shutdown()
-	testrpc.WaitForTestAgent(t, agent.RPC, "dc1")
 
 	cfg := api.DefaultConfig()
 	cfg.Address = agent.HTTPAddr()
@@ -310,7 +299,7 @@ func TestDynamicTLSConfig(t *testing.T) {
 	baseCfg := TestTLSConfig(t, "web", ca1)
 	newCfg := TestTLSConfig(t, "web", ca2)
 
-	c := newDynamicTLSConfig(baseCfg, nil)
+	c := newDynamicTLSConfig(baseCfg)
 
 	// Should set them from the base config
 	require.Equal(c.Leaf(), &baseCfg.Certificates[0])
@@ -376,7 +365,7 @@ func TestDynamicTLSConfig_Ready(t *testing.T) {
 	ca1 := connect.TestCA(t, nil)
 	baseCfg := TestTLSConfig(t, "web", ca1)
 
-	c := newDynamicTLSConfig(defaultTLSConfig(), nil)
+	c := newDynamicTLSConfig(defaultTLSConfig())
 	readyCh := c.ReadyWait()
 	assertBlocked(t, readyCh)
 	require.False(c.Ready(), "no roots or leaf, should not be ready")
@@ -388,17 +377,6 @@ func TestDynamicTLSConfig_Ready(t *testing.T) {
 
 	err = c.SetRoots(baseCfg.RootCAs)
 	require.NoError(err)
-	assertNotBlocked(t, readyCh)
-	require.True(c.Ready(), "should be ready")
-
-	ca2 := connect.TestCA(t, nil)
-	ca2cfg := TestTLSConfig(t, "web", ca2)
-
-	require.NoError(c.SetRoots(ca2cfg.RootCAs))
-	assertNotBlocked(t, readyCh)
-	require.False(c.Ready(), "invalid leaf, should not be ready")
-
-	require.NoError(c.SetRoots(baseCfg.RootCAs))
 	assertNotBlocked(t, readyCh)
 	require.True(c.Ready(), "should be ready")
 }

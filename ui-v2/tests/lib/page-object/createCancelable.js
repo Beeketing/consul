@@ -1,13 +1,10 @@
 export default function(clickable, is) {
-  return function(obj, scope = '') {
-    if (scope !== '') {
-      scope = scope + ' ';
-    }
+  return function(obj) {
     return {
       ...obj,
       ...{
-        cancel: clickable(scope + '[type=reset]'),
-        cancelIsEnabled: is(':not(:disabled)', scope + '[type=reset]'),
+        cancel: clickable('[type=reset]'),
+        cancelIsEnabled: is(':not(:disabled)', '[type=reset]'),
       },
     };
   };

@@ -14,8 +14,6 @@ func TestAPI_SessionCreateDestroy(t *testing.T) {
 	c, s := makeClient(t)
 	defer s.Stop()
 
-	s.WaitForSerfCheck(t)
-
 	session := c.Session()
 
 	id, meta, err := session.Create(nil, nil)
@@ -45,8 +43,6 @@ func TestAPI_SessionCreateRenewDestroy(t *testing.T) {
 	t.Parallel()
 	c, s := makeClient(t)
 	defer s.Stop()
-
-	s.WaitForSerfCheck(t)
 
 	session := c.Session()
 
@@ -98,8 +94,6 @@ func TestAPI_SessionCreateRenewDestroyRenew(t *testing.T) {
 	t.Parallel()
 	c, s := makeClient(t)
 	defer s.Stop()
-
-	s.WaitForSerfCheck(t)
 
 	session := c.Session()
 
@@ -155,8 +149,6 @@ func TestAPI_SessionCreateDestroyRenewPeriodic(t *testing.T) {
 	c, s := makeClient(t)
 	defer s.Stop()
 
-	s.WaitForSerfCheck(t)
-
 	session := c.Session()
 
 	entry := &SessionEntry{
@@ -210,8 +202,6 @@ func TestAPI_SessionRenewPeriodic_Cancel(t *testing.T) {
 	t.Parallel()
 	c, s := makeClient(t)
 	defer s.Stop()
-
-	s.WaitForSerfCheck(t)
 
 	session := c.Session()
 	entry := &SessionEntry{
@@ -288,8 +278,6 @@ func TestAPI_SessionInfo(t *testing.T) {
 	t.Parallel()
 	c, s := makeClient(t)
 	defer s.Stop()
-
-	s.WaitForSerfCheck(t)
 
 	session := c.Session()
 
@@ -370,8 +358,6 @@ func TestAPI_SessionNode(t *testing.T) {
 	c, s := makeClient(t)
 	defer s.Stop()
 
-	s.WaitForSerfCheck(t)
-
 	session := c.Session()
 
 	id, _, err := session.Create(nil, nil)
@@ -406,8 +392,6 @@ func TestAPI_SessionList(t *testing.T) {
 	t.Parallel()
 	c, s := makeClient(t)
 	defer s.Stop()
-
-	s.WaitForSerfCheck(t)
 
 	session := c.Session()
 

@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: dc > list: List Models
+Feature: List Models
   Scenario: Listing [Model]
     Given 1 datacenter model with the value "dc-1"
     And 3 [Model] models
@@ -16,7 +16,5 @@ Feature: dc > list: List Models
     | service | services | /dc-1/services           |
     | node    | nodes    | /dc-1/nodes              |
     | kv      | kvs      | /dc-1/kv                 |
-    # | acl     | acls     | /dc-1/acls               |
-    | token   | tokens   | /dc-1/acls/tokens        |
-    | policy  | policies | /dc-1/acls/policies      |
+    | acl     | acls     | /dc-1/acls               |
     -------------------------------------------------

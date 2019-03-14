@@ -21,10 +21,6 @@ test('it detects if a string ends in a slash', function(assert) {
       test: '//',
       expected: true,
     },
-    {
-      test: undefined,
-      expected: false,
-    },
   ].forEach(function(item) {
     const actual = isFolder(item.test);
     assert.equal(actual, item.expected);

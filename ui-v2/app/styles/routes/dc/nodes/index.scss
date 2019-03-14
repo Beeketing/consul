@@ -1,5 +1,6 @@
 // TODO: Generalize this, also see services/index
-@import '../../../components/pill/index';
 html.template-node.template-show td.tags span {
-  @extend %pill;
+  @extend %tag;
+  background-color: $gray;
+  margin-bottom: 0.5em;
 }

@@ -14,15 +14,11 @@ Feature: token headers
     ---
   Scenario: Set the token to [Token] and then navigate to the index page
     Given 1 datacenter model with the value "datacenter"
-    And the url "/v1/acl/tokens" responds with a 403 status
-    When I visit the tokens page for yaml
-    ---
-      dc: datacenter
-    ---
-    Then the url should be /datacenter/acls/tokens
+    When I visit the settings page
+    Then the url should be /settings
     Then I fill in with yaml
     ---
-      secret: [Token]
+      token: [Token]
     ---
     And I submit
     When I visit the index page

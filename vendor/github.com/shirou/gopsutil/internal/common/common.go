@@ -9,10 +9,9 @@ package common
 import (
 	"bufio"
 	"bytes"
-	"context"
 	"errors"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/url"
 	"os"
 	"os/exec"
@@ -27,43 +26,24 @@ import (
 
 var (
 	Timeout    = 3 * time.Second
-	ErrTimeout = errors.New("command timed out")
+	ErrTimeout = errors.New("Command timed out.")
 )
 
 type Invoker interface {
 	Command(string, ...string) ([]byte, error)
-	CommandWithContext(context.Context, string, ...string) ([]byte, error)
 }
 
 type Invoke struct{}
 
 func (i Invoke) Command(name string, arg ...string) ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), Timeout)
-	defer cancel()
-	return i.CommandWithContext(ctx, name, arg...)
-}
-
-func (i Invoke) CommandWithContext(ctx context.Context, name string, arg ...string) ([]byte, error) {
-	cmd := exec.CommandContext(ctx, name, arg...)
-
-	var buf bytes.Buffer
-	cmd.Stdout = &buf
-	cmd.Stderr = &buf
-
-	if err := cmd.Start(); err != nil {
-		return buf.Bytes(), err
-	}
-
-	if err := cmd.Wait(); err != nil {
-		return buf.Bytes(), err
-	}
-
-	return buf.Bytes(), nil
+	cmd := exec.Command(name, arg...)
+	return CombinedOutputTimeout(cmd, Timeout)
 }
 
 type FakeInvoke struct {
-	Suffix string // Suffix species expected file name suffix such as "fail"
-	Error  error  // If Error specfied, return the error.
+	CommandExpectedDir string // CommandExpectedDir specifies dir which includes expected outputs.
+	Suffix             string // Suffix species expected file name suffix such as "fail"
+	Error              error  // If Error specfied, return the error.
 }
 
 // Command in FakeInvoke returns from expected file if exists.
@@ -74,22 +54,22 @@ func (i FakeInvoke) Command(name string, arg ...string) ([]byte, error) {
 
 	arch := runtime.GOOS
 
-	commandName := filepath.Base(name)
-
-	fname := strings.Join(append([]string{commandName}, arg...), "")
+	fname := strings.Join(append([]string{name}, arg...), "")
 	fname = url.QueryEscape(fname)
-	fpath := path.Join("testdata", arch, fname)
+	var dir string
+	if i.CommandExpectedDir == "" {
+		dir = "expected"
+	} else {
+		dir = i.CommandExpectedDir
+	}
+	fpath := path.Join(dir, arch, fname)
 	if i.Suffix != "" {
 		fpath += "_" + i.Suffix
 	}
 	if PathExists(fpath) {
 		return ioutil.ReadFile(fpath)
 	}
-	return []byte{}, fmt.Errorf("could not find testdata: %s", fpath)
-}
-
-func (i FakeInvoke) CommandWithContext(ctx context.Context, name string, arg ...string) ([]byte, error) {
-	return i.Command(name, arg...)
+	return exec.Command(name, arg...).Output()
 }
 
 var ErrNotImplementedError = errors.New("not implemented yet")
@@ -324,12 +304,42 @@ func HostEtc(combineWith ...string) string {
 	return GetEnv("HOST_ETC", "/etc", combineWith...)
 }
 
-func HostVar(combineWith ...string) string {
-	return GetEnv("HOST_VAR", "/var", combineWith...)
+// CombinedOutputTimeout runs the given command with the given timeout and
+// returns the combined output of stdout and stderr.
+// If the command times out, it attempts to kill the process.
+// copied from https://github.com/influxdata/telegraf
+func CombinedOutputTimeout(c *exec.Cmd, timeout time.Duration) ([]byte, error) {
+	var b bytes.Buffer
+	c.Stdout = &b
+	c.Stderr = &b
+	if err := c.Start(); err != nil {
+		return nil, err
+	}
+	err := WaitTimeout(c, timeout)
+	return b.Bytes(), err
 }
 
-func HostRun(combineWith ...string) string {
-	return GetEnv("HOST_RUN", "/run", combineWith...)
+// WaitTimeout waits for the given command to finish with a timeout.
+// It assumes the command has already been started.
+// If the command times out, it attempts to kill the process.
+// copied from https://github.com/influxdata/telegraf
+func WaitTimeout(c *exec.Cmd, timeout time.Duration) error {
+	timer := time.NewTimer(timeout)
+	done := make(chan error)
+	go func() { done <- c.Wait() }()
+	select {
+	case err := <-done:
+		timer.Stop()
+		return err
+	case <-timer.C:
+		if err := c.Process.Kill(); err != nil {
+			log.Printf("FATAL error killing process: %s", err)
+			return err
+		}
+		// wait for the command to return after killing it
+		<-done
+		return ErrTimeout
+	}
 }
 
 // https://gist.github.com/kylelemons/1525278
@@ -373,20 +383,4 @@ func Pipeline(cmds ...*exec.Cmd) ([]byte, []byte, error) {
 
 	// Return the pipeline output and the collected standard error
 	return output.Bytes(), stderr.Bytes(), nil
-}
-
-// getSysctrlEnv sets LC_ALL=C in a list of env vars for use when running
-// sysctl commands (see DoSysctrl).
-func getSysctrlEnv(env []string) []string {
-	foundLC := false
-	for i, line := range env {
-		if strings.HasPrefix(line, "LC_ALL") {
-			env[i] = "LC_ALL=C"
-			foundLC = true
-		}
-	}
-	if !foundLC {
-		env = append(env, "LC_ALL=C")
-	}
-	return env
 }

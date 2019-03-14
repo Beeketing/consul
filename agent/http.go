@@ -142,41 +142,6 @@ func (s *HTTPServer) handler(enableDebug bool) http.Handler {
 		mux.Handle(pattern, gzipHandler)
 	}
 
-	// handlePProf takes the given pattern and pprof handler
-	// and wraps it to add authorization and metrics
-	handlePProf := func(pattern string, handler http.HandlerFunc) {
-		wrapper := func(resp http.ResponseWriter, req *http.Request) {
-			var token string
-			s.parseToken(req, &token)
-
-			rule, err := s.agent.resolveToken(token)
-			if err != nil {
-				resp.WriteHeader(http.StatusForbidden)
-				return
-			}
-
-			// If enableDebug is not set, and ACLs are disabled, write
-			// an unauthorized response
-			if !enableDebug {
-				if s.checkACLDisabled(resp, req) {
-					return
-				}
-			}
-
-			// If the token provided does not have the necessary permissions,
-			// write a forbidden response
-			if rule != nil && !rule.OperatorRead() {
-				resp.WriteHeader(http.StatusForbidden)
-				return
-			}
-
-			// Call the pprof handler
-			handler(resp, req)
-		}
-
-		handleFuncMetrics(pattern, http.HandlerFunc(wrapper))
-	}
-
 	mux.HandleFunc("/", s.Index)
 	for pattern, fn := range endpoints {
 		thisFn := fn
@@ -186,13 +151,12 @@ func (s *HTTPServer) handler(enableDebug bool) http.Handler {
 		}
 		handleFuncMetrics(pattern, s.wrap(bound, methods))
 	}
-
-	// Register wrapped pprof handlers
-	handlePProf("/debug/pprof/", pprof.Index)
-	handlePProf("/debug/pprof/cmdline", pprof.Cmdline)
-	handlePProf("/debug/pprof/profile", pprof.Profile)
-	handlePProf("/debug/pprof/symbol", pprof.Symbol)
-	handlePProf("/debug/pprof/trace", pprof.Trace)
+	if enableDebug {
+		handleFuncMetrics("/debug/pprof/", pprof.Index)
+		handleFuncMetrics("/debug/pprof/cmdline", pprof.Cmdline)
+		handleFuncMetrics("/debug/pprof/profile", pprof.Profile)
+		handleFuncMetrics("/debug/pprof/symbol", pprof.Symbol)
+	}
 
 	if s.IsUIEnabled() {
 		legacy_ui, err := strconv.ParseBool(os.Getenv("CONSUL_UI_LEGACY"))
@@ -219,20 +183,14 @@ func (s *HTTPServer) handler(enableDebug bool) http.Handler {
 			uifs = &redirectFS{fs: uifs}
 		}
 
-		mux.Handle("/robots.txt", http.FileServer(uifs))
 		mux.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(uifs)))
 	}
 
 	// Wrap the whole mux with a handler that bans URLs with non-printable
-	// characters, unless disabled explicitly to deal with old keys that fail this
-	// check.
-	h := cleanhttp.PrintablePathCheckHandler(mux, nil)
-	if s.agent.config.DisableHTTPUnprintableCharFilter {
-		h = mux
-	}
+	// characters.
 	return &wrappedMux{
 		mux:     mux,
-		handler: h,
+		handler: cleanhttp.PrintablePathCheckHandler(mux, nil),
 	}
 }
 
@@ -261,7 +219,7 @@ func (s *HTTPServer) nodeName() string {
 // And then the loop that looks for parameters called "token" does the last
 // step to get to the final redacted form.
 var (
-	aclEndpointRE = regexp.MustCompile("^(/v1/acl/(create|update|destroy|info|clone|list)/)([^?]+)([?]?.*)$")
+	aclEndpointRE = regexp.MustCompile("^(/v1/acl/[^/]+/)([^?]+)([?]?.*)$")
 )
 
 // wrap is used to wrap functions to make them more convenient
@@ -287,7 +245,7 @@ func (s *HTTPServer) wrap(handler endpoint, methods []string) http.HandlerFunc {
 				logURL = strings.Replace(logURL, token, "<hidden>", -1)
 			}
 		}
-		logURL = aclEndpointRE.ReplaceAllString(logURL, "$1<hidden>$4")
+		logURL = aclEndpointRE.ReplaceAllString(logURL, "$1<hidden>$3")
 
 		if s.blacklist.Block(req.URL.Path) {
 			errMsg := "Endpoint is blocked by agent configuration"
@@ -505,17 +463,11 @@ func setMeta(resp http.ResponseWriter, m *structs.QueryMeta) {
 
 // setCacheMeta sets http response headers to indicate cache status.
 func setCacheMeta(resp http.ResponseWriter, m *cache.ResultMeta) {
-	if m == nil {
-		return
-	}
 	str := "MISS"
-	if m.Hit {
+	if m != nil && m.Hit {
 		str = "HIT"
 	}
 	resp.Header().Set("X-Cache", str)
-	if m.Hit {
-		resp.Header().Set("Age", fmt.Sprintf("%.0f", m.Age.Seconds()))
-	}
 }
 
 // setHeaders is used to set canonical response header fields
@@ -550,64 +502,6 @@ func parseWait(resp http.ResponseWriter, req *http.Request, b *structs.QueryOpti
 	return false
 }
 
-// parseCacheControl parses the CacheControl HTTP header value. So far we only
-// support maxage directive.
-func parseCacheControl(resp http.ResponseWriter, req *http.Request, b *structs.QueryOptions) bool {
-	raw := strings.ToLower(req.Header.Get("Cache-Control"))
-
-	if raw == "" {
-		return false
-	}
-
-	// Didn't want to import a full parser for this. While quoted strings are
-	// allowed in some directives, max-age does not allow them per
-	// https://tools.ietf.org/html/rfc7234#section-5.2.2.8 so we assume all
-	// well-behaved clients use the exact token form of max-age=<delta-seconds>
-	// where delta-seconds is a non-negative decimal integer.
-	directives := strings.Split(raw, ",")
-
-	parseDurationOrFail := func(raw string) (time.Duration, bool) {
-		i, err := strconv.Atoi(raw)
-		if err != nil {
-			resp.WriteHeader(http.StatusBadRequest)
-			fmt.Fprint(resp, "Invalid Cache-Control header.")
-			return 0, true
-		}
-		return time.Duration(i) * time.Second, false
-	}
-
-	for _, d := range directives {
-		d = strings.ToLower(strings.TrimSpace(d))
-
-		if d == "must-revalidate" {
-			b.MustRevalidate = true
-		}
-
-		if strings.HasPrefix(d, "max-age=") {
-			d, failed := parseDurationOrFail(d[8:])
-			if failed {
-				return true
-			}
-			b.MaxAge = d
-			if d == 0 {
-				// max-age=0 specifically means that we need to consider the cache stale
-				// immediately however MaxAge = 0 is indistinguishable from the default
-				// where MaxAge is unset.
-				b.MustRevalidate = true
-			}
-		}
-		if strings.HasPrefix(d, "stale-if-error=") {
-			d, failed := parseDurationOrFail(d[15:])
-			if failed {
-				return true
-			}
-			b.StaleIfError = d
-		}
-	}
-
-	return false
-}
-
 // parseConsistency is used to parse the ?stale and ?consistent query params.
 // Returns true on error
 func (s *HTTPServer) parseConsistency(resp http.ResponseWriter, req *http.Request, b *structs.QueryOptions) bool {
@@ -622,10 +516,6 @@ func (s *HTTPServer) parseConsistency(resp http.ResponseWriter, req *http.Reques
 		defaults = false
 	}
 	if _, ok := query["leader"]; ok {
-		defaults = false
-	}
-	if _, ok := query["cached"]; ok {
-		b.UseCache = true
 		defaults = false
 	}
 	if maxStale := query.Get("max_stale"); maxStale != "" {
@@ -656,11 +546,6 @@ func (s *HTTPServer) parseConsistency(resp http.ResponseWriter, req *http.Reques
 		fmt.Fprint(resp, "Cannot specify ?stale with ?consistent, conflicting semantics.")
 		return true
 	}
-	if b.UseCache && b.RequireConsistent {
-		resp.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(resp, "Cannot specify ?cached with ?consistent, conflicting semantics.")
-		return true
-	}
 	return false
 }
 
@@ -673,63 +558,20 @@ func (s *HTTPServer) parseDC(req *http.Request, dc *string) {
 	}
 }
 
-// parseTokenInternal is used to parse the ?token query param or the X-Consul-Token header or
-// Authorization Bearer token (RFC6750) and
-// optionally resolve proxy tokens to real ACL tokens. If the token is invalid or not specified it will populate
-// the token with the agents UserToken (acl_token in the consul configuration)
-// Parsing has the following priority: ?token, X-Consul-Token and last "Authorization: Bearer "
-func (s *HTTPServer) parseTokenInternal(req *http.Request, token *string, resolveProxyToken bool) {
-	tok := ""
+// parseToken is used to parse the ?token query param or the X-Consul-Token header
+func (s *HTTPServer) parseToken(req *http.Request, token *string) {
 	if other := req.URL.Query().Get("token"); other != "" {
-		tok = other
-	} else if other := req.Header.Get("X-Consul-Token"); other != "" {
-		tok = other
-	} else if other := req.Header.Get("Authorization"); other != "" {
-		// HTTP Authorization headers are in the format: <Scheme>[SPACE]<Value>
-		// Ref. https://tools.ietf.org/html/rfc7236#section-3
-		parts := strings.Split(other, " ")
-
-		// Authorization Header is invalid if containing 1 or 0 parts, e.g.:
-		// "" || "<Scheme><Value>" || "<Scheme>" || "<Value>"
-		if len(parts) > 1 {
-			scheme := parts[0]
-			// Everything after "<Scheme>" is "<Value>", trimmed
-			value := strings.TrimSpace(strings.Join(parts[1:], " "))
-
-			// <Scheme> must be "Bearer"
-			if scheme == "Bearer" {
-				// Since Bearer tokens shouldnt contain spaces (rfc6750#section-2.1)
-				// "value" is tokenized, only the first item is used
-				tok = strings.TrimSpace(strings.Split(value, " ")[0])
-			}
-		}
-	}
-
-	if tok != "" {
-		if resolveProxyToken {
-			if p := s.agent.resolveProxyToken(tok); p != nil {
-				*token = s.agent.State.ServiceToken(p.Proxy.TargetServiceID)
-				return
-			}
-		}
-
-		*token = tok
+		*token = other
 		return
 	}
 
+	if other := req.Header.Get("X-Consul-Token"); other != "" {
+		*token = other
+		return
+	}
+
+	// Set the default ACLToken
 	*token = s.agent.tokens.UserToken()
-}
-
-// parseToken is used to parse the ?token query param or the X-Consul-Token header or
-// Authorization Bearer token header (RFC6750) and resolve proxy tokens to real ACL tokens
-func (s *HTTPServer) parseToken(req *http.Request, token *string) {
-	s.parseTokenInternal(req, token, true)
-}
-
-// parseTokenWithoutResolvingProxyToken is used to parse the ?token query param or the X-Consul-Token header
-// or Authorization Bearer header token (RFC6750) and
-func (s *HTTPServer) parseTokenWithoutResolvingProxyToken(req *http.Request, token *string) {
-	s.parseTokenInternal(req, token, false)
 }
 
 func sourceAddrFromRequest(req *http.Request) string {
@@ -784,27 +626,13 @@ func (s *HTTPServer) parseMetaFilter(req *http.Request) map[string]string {
 	return nil
 }
 
-// parseInternal is a convenience method for endpoints that need
-// to use both parseWait and parseDC.
-func (s *HTTPServer) parseInternal(resp http.ResponseWriter, req *http.Request, dc *string, b *structs.QueryOptions, resolveProxyToken bool) bool {
-	s.parseDC(req, dc)
-	s.parseTokenInternal(req, &b.Token, resolveProxyToken)
-	if s.parseConsistency(resp, req, b) {
-		return true
-	}
-	if parseCacheControl(resp, req, b) {
-		return true
-	}
-	return parseWait(resp, req, b)
-}
-
 // parse is a convenience method for endpoints that need
 // to use both parseWait and parseDC.
 func (s *HTTPServer) parse(resp http.ResponseWriter, req *http.Request, dc *string, b *structs.QueryOptions) bool {
-	return s.parseInternal(resp, req, dc, b, true)
-}
-
-// parseWithoutResolvingProxyToken is a convenience method similar to parse except that it disables resolving proxy tokens
-func (s *HTTPServer) parseWithoutResolvingProxyToken(resp http.ResponseWriter, req *http.Request, dc *string, b *structs.QueryOptions) bool {
-	return s.parseInternal(resp, req, dc, b, false)
+	s.parseDC(req, dc)
+	s.parseToken(req, &b.Token)
+	if s.parseConsistency(resp, req, b) {
+		return true
+	}
+	return parseWait(resp, req, b)
 }

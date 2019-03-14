@@ -25,13 +25,12 @@ This endpoint reads the current raft configuration.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes     | Agent Caching | ACL Required    |
-| ---------------- | --------------------- | ------------- | --------------- |
-| `NO`             | `default` and `stale` | `none`        | `operator:read` |
+| Blocking Queries | Consistency Modes     | ACL Required    |
+| ---------------- | --------------------- | --------------- |
+| `NO`             | `default` and `stale` | `operator:read` |
 
 ### Parameters
 
@@ -50,7 +49,7 @@ The table below shows this endpoint's support for
 
 ```text
 $ curl \
-    http://127.0.0.1:8500/v1/operator/raft/configuration
+    https://consul.rocks/v1/operator/raft/configuration
 ```
 
 ### Sample Response
@@ -123,13 +122,12 @@ write privileges.
 
 The table below shows this endpoint's support for
 [blocking queries](/api/index.html#blocking-queries),
-[consistency modes](/api/index.html#consistency-modes),
-[agent caching](/api/index.html#agent-caching), and
+[consistency modes](/api/index.html#consistency-modes), and
 [required ACLs](/api/index.html#acls).
 
-| Blocking Queries | Consistency Modes | Agent Caching | ACL Required     |
-| ---------------- | ----------------- | ------------- | ---------------- |
-| `NO`             | `none`            | `none`        | `operator:write` |
+| Blocking Queries | Consistency Modes | ACL Required     |
+| ---------------- | ----------------- | ---------------- |
+| `NO`             | `none`            | `operator:write` |
 
 ### Parameters
 
@@ -144,5 +142,5 @@ The table below shows this endpoint's support for
 ```text
 $ curl \
     --request DELETE \
-    http://127.0.0.1:8500/v1/operator/raft/peer?address=1.2.3.4:5678
+    https://consul.rocks/v1/operator/raft/peer?address=1.2.3.4:5678
 ```

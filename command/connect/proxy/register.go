@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 	"sync"
 	"time"
 
@@ -196,14 +195,12 @@ func (r *RegisterMonitor) register() {
 
 	// If we're here, then we're registering the service.
 	err = r.Client.Agent().ServiceRegister(&api.AgentServiceRegistration{
-		Kind:    api.ServiceKindConnectProxy,
-		ID:      serviceID,
-		Name:    serviceName,
-		Address: r.LocalAddress,
-		Port:    r.LocalPort,
-		Proxy: &api.AgentServiceConnectProxyConfig{
-			DestinationServiceName: r.Service,
-		},
+		Kind:             api.ServiceKindConnectProxy,
+		ProxyDestination: r.Service,
+		ID:               serviceID,
+		Name:             serviceName,
+		Address:          r.LocalAddress,
+		Port:             r.LocalPort,
 		Check: &api.AgentServiceCheck{
 			CheckID: r.checkID(),
 			Name:    "proxy heartbeat",
@@ -225,9 +222,7 @@ func (r *RegisterMonitor) heartbeat() {
 	// Trigger the health check passing. We don't need to retry this
 	// since we do a couple tries within the TTL period.
 	if err := r.Client.Agent().PassTTL(r.checkID(), ""); err != nil {
-		if !strings.Contains(err.Error(), "does not have associated") {
-			r.Logger.Printf("[WARN] proxy: heartbeat failed: %s", err)
-		}
+		r.Logger.Printf("[WARN] proxy: heartbeat failed: %s", err)
 	}
 }
 

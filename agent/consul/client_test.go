@@ -450,7 +450,6 @@ func TestClient_SnapshotRPC(t *testing.T) {
 
 	// Try to join.
 	joinLAN(t, c1, s1)
-	testrpc.WaitForLeader(t, c1.RPC, "dc1")
 
 	// Wait until we've got a healthy server.
 	retry.Run(t, func(r *retry.R) {

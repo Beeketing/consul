@@ -7,8 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/testrpc"
-
 	"github.com/stretchr/testify/assert"
 
 	"github.com/hashicorp/consul/agent"
@@ -33,7 +31,6 @@ func TestKeyWatch(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"key", "key":"foo/bar/baz"}`)
@@ -88,7 +85,6 @@ func TestKeyWatch_With_PrefixDelete(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"key", "key":"foo/bar/baz"}`)
@@ -143,7 +139,6 @@ func TestKeyPrefixWatch(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"keyprefix", "prefix":"foo/"}`)
@@ -197,7 +192,6 @@ func TestServicesWatch(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"services"}`)
@@ -252,7 +246,6 @@ func TestNodesWatch(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"nodes"}`)
@@ -304,7 +297,6 @@ func TestServiceWatch(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"service", "service":"foo", "tag":"bar", "passingonly":true}`)
@@ -361,7 +353,6 @@ func TestChecksWatch_State(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"checks", "state":"warning"}`)
@@ -423,7 +414,6 @@ func TestChecksWatch_Service(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"checks", "service":"foobar"}`)
@@ -490,7 +480,6 @@ func TestEventWatch(t *testing.T) {
 	t.Parallel()
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	invoke := makeInvokeCh()
 	plan := mustParse(t, `{"type":"event", "name": "foo"}`)
@@ -543,7 +532,6 @@ func TestConnectRootsWatch(t *testing.T) {
 	// NewTestAgent will bootstrap a new CA
 	a := agent.NewTestAgent(t.Name(), "")
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	var originalCAID string
 	invoke := makeInvokeCh()
@@ -597,7 +585,6 @@ func TestConnectLeafWatch(t *testing.T) {
 	// NewTestAgent will bootstrap a new CA
 	a := agent.NewTestAgent(t.Name(), ``)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	// Register a web service to get certs for
 	{
@@ -675,7 +662,6 @@ func TestConnectProxyConfigWatch(t *testing.T) {
 	}
 	`)
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	// Register a local agent service with a managed proxy
 	reg := &consulapi.AgentServiceRegistration{
@@ -716,63 +702,6 @@ func TestConnectProxyConfigWatch(t *testing.T) {
 		// Change the proxy's config
 		reg.Connect.Proxy.Config["foo"] = "buzz"
 		reg.Connect.Proxy.Config["baz"] = "qux"
-		err := agent.ServiceRegister(reg)
-		require.NoError(t, err)
-	}()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		if err := plan.Run(a.HTTPAddr()); err != nil {
-			t.Fatalf("err: %v", err)
-		}
-	}()
-
-	if err := <-invoke; err != nil {
-		t.Fatalf("err: %v", err)
-	}
-
-	plan.Stop()
-	wg.Wait()
-}
-
-func TestAgentServiceWatch(t *testing.T) {
-	t.Parallel()
-	a := agent.NewTestAgent(t.Name(), ``)
-	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
-
-	// Register a local agent service
-	reg := &consulapi.AgentServiceRegistration{
-		Name: "web",
-		Port: 8080,
-	}
-	client := a.Client()
-	agent := client.Agent()
-	err := agent.ServiceRegister(reg)
-	require.NoError(t, err)
-
-	invoke := makeInvokeCh()
-	plan := mustParse(t, `{"type":"agent_service", "service_id":"web"}`)
-	plan.HybridHandler = func(blockParamVal watch.BlockingParamVal, raw interface{}) {
-		if raw == nil {
-			return // ignore
-		}
-		v, ok := raw.(*consulapi.AgentService)
-		if !ok || v == nil {
-			return // ignore
-		}
-		invoke <- nil
-	}
-
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		time.Sleep(20 * time.Millisecond)
-
-		// Change the service definition
-		reg.Port = 9090
 		err := agent.ServiceRegister(reg)
 		require.NoError(t, err)
 	}()

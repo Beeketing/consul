@@ -1,7 +1,4 @@
 {{#app-view class="kv list" loading=isLoading}}
-    {{#block-slot 'notification' as |status type|}}
-      {{partial 'dc/kv/notifications'}}
-    {{/block-slot}}
     {{#block-slot 'breadcrumbs'}}
         <ol>
 {{#if (not-eq parent.Key '/') }}
@@ -20,7 +17,6 @@
                 {{ take 1 (drop 1 (reverse (split parent.Key '/'))) }}
             {{/if}}
         </h1>
-        <label for="toolbar-toggle"></label>
     {{/block-slot}}
     {{#block-slot 'toolbar'}}
 {{#if (gt items.length 0) }}
@@ -64,7 +60,11 @@
                         {{/action-group}}
                     {{/block-slot}}
                     {{#block-slot 'dialog' as |execute cancel message|}}
-                      {{delete-confirmation message=message execute=execute cancel=cancel}}
+                        <p>
+                            {{message}}
+                        </p>
+                        <button type="button" class="type-delete" {{action execute}}>Confirm Delete</button>
+                        <button type="button" class="type-cancel" {{action cancel}}>Cancel</button>
                     {{/block-slot}}
                 {{/confirmation-dialog}}
             {{/block-slot}}

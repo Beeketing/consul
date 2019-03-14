@@ -8,8 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/testrpc"
-
 	"github.com/hashicorp/consul/agent/consul/autopilot"
 	"github.com/hashicorp/consul/agent/structs"
 	"github.com/hashicorp/consul/api"
@@ -293,7 +291,6 @@ func TestOperator_AutopilotGetConfiguration(t *testing.T) {
 	t.Parallel()
 	a := NewTestAgent(t.Name(), "")
 	defer a.Shutdown()
-	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
 	body := bytes.NewBuffer(nil)
 	req, _ := http.NewRequest("GET", "/v1/operator/autopilot/configuration", body)

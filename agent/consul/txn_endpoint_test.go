@@ -158,7 +158,6 @@ func TestTxn_Apply_ACLDeny(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 	})
@@ -185,7 +184,7 @@ func TestTxn_Apply_ACLDeny(t *testing.T) {
 			Op:         structs.ACLSet,
 			ACL: structs.ACL{
 				Name:  "User token",
-				Type:  structs.ACLTokenTypeClient,
+				Type:  structs.ACLTypeClient,
 				Rules: testListRules,
 			},
 			WriteRequest: structs.WriteRequest{Token: "root"},
@@ -481,7 +480,6 @@ func TestTxn_Read_ACLDeny(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 	})
@@ -510,7 +508,7 @@ func TestTxn_Read_ACLDeny(t *testing.T) {
 			Op:         structs.ACLSet,
 			ACL: structs.ACL{
 				Name:  "User token",
-				Type:  structs.ACLTokenTypeClient,
+				Type:  structs.ACLTypeClient,
 				Rules: testListRules,
 			},
 			WriteRequest: structs.WriteRequest{Token: "root"},

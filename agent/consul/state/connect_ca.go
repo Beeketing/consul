@@ -93,12 +93,6 @@ func (s *Snapshot) CAConfig() (*structs.CAConfiguration, error) {
 
 // CAConfig is used when restoring from a snapshot.
 func (s *Restore) CAConfig(config *structs.CAConfiguration) error {
-	// Don't restore a blank CA config
-	// https://github.com/hashicorp/consul/issues/4954
-	if config.Provider == "" {
-		return nil
-	}
-
 	if err := s.tx.Insert(caConfigTableName, config); err != nil {
 		return fmt.Errorf("failed restoring CA config: %s", err)
 	}
@@ -178,11 +172,7 @@ func (s *Store) caSetConfigTxn(idx uint64, tx *memdb.Txn, config *structs.CAConf
 	if prev != nil {
 		existing := prev.(*structs.CAConfiguration)
 		config.CreateIndex = existing.CreateIndex
-		// Allow the ClusterID to change if it's provided by an internal operation, such
-		// as a primary datacenter being switched to secondary mode.
-		if config.ClusterID == "" {
-			config.ClusterID = existing.ClusterID
-		}
+		config.ClusterID = existing.ClusterID
 	} else {
 		config.CreateIndex = idx
 	}

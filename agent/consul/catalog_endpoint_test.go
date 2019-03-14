@@ -159,16 +159,16 @@ func TestCatalog_Register_ACLDeny(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
 	})
 	defer os.RemoveAll(dir1)
 	defer s1.Shutdown()
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
 	codec := rpcClient(t, s1)
 	defer codec.Close()
+
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	// Create the ACL.
 	arg := structs.ACLRequest{
@@ -176,7 +176,7 @@ func TestCatalog_Register_ACLDeny(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 service "foo" {
 	policy = "write"
@@ -360,40 +360,7 @@ func TestCatalog_Register_ConnectProxy(t *testing.T) {
 	assert.Len(resp.ServiceNodes, 1)
 	v := resp.ServiceNodes[0]
 	assert.Equal(structs.ServiceKindConnectProxy, v.ServiceKind)
-	assert.Equal(args.Service.Proxy.DestinationServiceName, v.ServiceProxy.DestinationServiceName)
-}
-
-// DEPRECATED (ProxyDestination) - remove this whole test case when removing
-// ProxyDestination
-func TestCatalog_Register_DeprecatedConnectProxy(t *testing.T) {
-	t.Parallel()
-
-	assert := assert.New(t)
-	dir1, s1 := testServer(t)
-	defer os.RemoveAll(dir1)
-	defer s1.Shutdown()
-	codec := rpcClient(t, s1)
-	defer codec.Close()
-
-	args := structs.TestRegisterRequestProxy(t)
-	args.Service.ProxyDestination = "legacy"
-	args.Service.Proxy = structs.ConnectProxyConfig{}
-
-	// Register
-	var out struct{}
-	assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out))
-
-	// List
-	req := structs.ServiceSpecificRequest{
-		Datacenter:  "dc1",
-		ServiceName: args.Service.Service,
-	}
-	var resp structs.IndexedServiceNodes
-	assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &req, &resp))
-	assert.Len(resp.ServiceNodes, 1)
-	v := resp.ServiceNodes[0]
-	assert.Equal(structs.ServiceKindConnectProxy, v.ServiceKind)
-	assert.Equal(args.Service.ProxyDestination, v.ServiceProxy.DestinationServiceName)
+	assert.Equal(args.Service.ProxyDestination, v.ServiceProxyDestination)
 }
 
 // Test an invalid ConnectProxy. We don't need to exhaustively test because
@@ -409,13 +376,13 @@ func TestCatalog_Register_ConnectProxy_invalid(t *testing.T) {
 	defer codec.Close()
 
 	args := structs.TestRegisterRequestProxy(t)
-	args.Service.Proxy.DestinationServiceName = ""
+	args.Service.ProxyDestination = ""
 
 	// Register
 	var out struct{}
 	err := msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out)
 	assert.NotNil(err)
-	assert.Contains(err.Error(), "DestinationServiceName")
+	assert.Contains(err.Error(), "ProxyDestination")
 }
 
 // Test that write is required for the proxy destination to register a proxy.
@@ -425,7 +392,6 @@ func TestCatalog_Register_ConnectProxy_ACLProxyDestination(t *testing.T) {
 	assert := assert.New(t)
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 	})
@@ -442,7 +408,7 @@ func TestCatalog_Register_ConnectProxy_ACLProxyDestination(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 service "foo" {
 	policy = "write"
@@ -457,7 +423,7 @@ service "foo" {
 	// Register should fail because we don't have permission on the destination
 	args := structs.TestRegisterRequestProxy(t)
 	args.Service.Service = "foo"
-	args.Service.Proxy.DestinationServiceName = "bar"
+	args.Service.ProxyDestination = "bar"
 	args.WriteRequest.Token = token
 	var out struct{}
 	err := msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out)
@@ -466,7 +432,7 @@ service "foo" {
 	// Register should fail with the right destination but wrong name
 	args = structs.TestRegisterRequestProxy(t)
 	args.Service.Service = "bar"
-	args.Service.Proxy.DestinationServiceName = "foo"
+	args.Service.ProxyDestination = "foo"
 	args.WriteRequest.Token = token
 	err = msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out)
 	assert.True(acl.IsErrPermissionDenied(err))
@@ -474,7 +440,7 @@ service "foo" {
 	// Register should work with the right destination
 	args = structs.TestRegisterRequestProxy(t)
 	args.Service.Service = "foo"
-	args.Service.Proxy.DestinationServiceName = "foo"
+	args.Service.ProxyDestination = "foo"
 	args.WriteRequest.Token = token
 	assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out))
 }
@@ -539,7 +505,6 @@ func TestCatalog_Deregister_ACLDeny(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
@@ -557,7 +522,7 @@ func TestCatalog_Deregister_ACLDeny(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 node "node" {
 	policy = "write"
@@ -943,8 +908,8 @@ func TestCatalog_ListNodes_StaleRead(t *testing.T) {
 	// Try to join
 	joinLAN(t, s2, s1)
 
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
-	testrpc.WaitForTestAgent(t, s2.RPC, "dc1")
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
+	testrpc.WaitForLeader(t, s2.RPC, "dc1")
 
 	// Use the follower as the client
 	var codec rpc.ClientCodec
@@ -1187,7 +1152,6 @@ func TestCatalog_ListNodes_ACLFilter(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
@@ -1235,7 +1199,7 @@ func TestCatalog_ListNodes_ACLFilter(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: fmt.Sprintf(`
 node "%s" {
 	policy = "read"
@@ -1344,7 +1308,7 @@ func TestCatalog_ListServices_NodeMetaFilter(t *testing.T) {
 	codec := rpcClient(t, s1)
 	defer codec.Close()
 
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
+	testrpc.WaitForLeader(t, s1.RPC, "dc1")
 
 	// Add a new node with the right meta k/v pair
 	node := &structs.Node{Node: "foo", Address: "127.0.0.1", Meta: map[string]string{"somekey": "somevalue"}}
@@ -1503,21 +1467,11 @@ func TestCatalog_ListServices_Timeout(t *testing.T) {
 
 func TestCatalog_ListServices_Stale(t *testing.T) {
 	t.Parallel()
-	dir1, s1 := testServerWithConfig(t, func(c *Config) {
-		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
-	})
+	dir1, s1 := testServer(t)
 	defer os.RemoveAll(dir1)
 	defer s1.Shutdown()
-
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
-	dir2, s2 := testServerWithConfig(t, func(c *Config) {
-		c.ACLDatacenter = "dc1" // Enable ACLs!
-		c.ACLsEnabled = true
-		c.Bootstrap = false // Disable bootstrap
-	})
-	defer os.RemoveAll(dir2)
-	defer s2.Shutdown()
+	codec := rpcClient(t, s1)
+	defer codec.Close()
 
 	args := structs.DCSpecificRequest{
 		Datacenter: "dc1",
@@ -1525,62 +1479,27 @@ func TestCatalog_ListServices_Stale(t *testing.T) {
 	args.AllowStale = true
 	var out structs.IndexedServices
 
-	// Inject a node
-	if err := s1.fsm.State().EnsureNode(3, &structs.Node{Node: "foo", Address: "127.0.0.1"}); err != nil {
+	// Inject a fake service
+	if err := s1.fsm.State().EnsureNode(1, &structs.Node{Node: "foo", Address: "127.0.0.1"}); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	if err := s1.fsm.State().EnsureService(2, "foo", &structs.NodeService{ID: "db", Service: "db", Tags: []string{"primary"}, Address: "127.0.0.1", Port: 5000}); err != nil {
 		t.Fatalf("err: %v", err)
 	}
 
-	codec := rpcClient(t, s2)
-	defer codec.Close()
-
-	// Run the query, do not wait for leader, never any contact with leader, should fail
-	if err := msgpackrpc.CallWithCodec(codec, "Catalog.ListServices", &args, &out); err == nil || err.Error() != structs.ErrNoLeader.Error() {
-		t.Fatalf("expected %v but got err: %v and %v", structs.ErrNoLeader, err, out)
-	}
-
-	// Try to join
-	joinLAN(t, s2, s1)
-	retry.Run(t, func(r *retry.R) { r.Check(wantRaft([]*Server{s1, s2})) })
-	waitForLeader(s1, s2)
-
-	testrpc.WaitForLeader(t, s2.RPC, "dc1")
+	// Run the query, do not wait for leader!
 	if err := msgpackrpc.CallWithCodec(codec, "Catalog.ListServices", &args, &out); err != nil {
 		t.Fatalf("err: %v", err)
 	}
 
-	// Should find the services
+	// Should find the service
 	if len(out.Services) != 1 {
-		t.Fatalf("bad: %#v", out.Services)
+		t.Fatalf("bad: %v", out)
 	}
 
-	if !out.KnownLeader {
-		t.Fatalf("should have a leader: %v", out)
-	}
-
-	s1.Leave()
-	s1.Shutdown()
-
-	testrpc.WaitUntilNoLeader(t, s2.RPC, "dc1")
-
-	args.AllowStale = false
-	// Since the leader is now down, non-stale query should fail now
-	if err := msgpackrpc.CallWithCodec(codec, "Catalog.ListServices", &args, &out); err == nil || err.Error() != structs.ErrNoLeader.Error() {
-		t.Fatalf("expected %v but got err: %v and %v", structs.ErrNoLeader, err, out)
-	}
-
-	// With stale, request should still work
-	args.AllowStale = true
-	if err := msgpackrpc.CallWithCodec(codec, "Catalog.ListServices", &args, &out); err != nil {
-		t.Fatalf("err: %v", err)
-	}
-
-	// Should find old service
-	if len(out.Services) != 1 {
-		t.Fatalf("bad: %#v", out)
-	}
-
+	// Should not have a leader! Stale read
 	if out.KnownLeader {
-		t.Fatalf("should not have a leader anymore: %#v", out)
+		t.Fatalf("bad: %v", out)
 	}
 }
 
@@ -1595,7 +1514,7 @@ func TestCatalog_ListServiceNodes(t *testing.T) {
 	args := structs.ServiceSpecificRequest{
 		Datacenter:  "dc1",
 		ServiceName: "db",
-		ServiceTags: []string{"slave"},
+		ServiceTag:  "slave",
 		TagFilter:   false,
 	}
 	var out structs.IndexedServiceNodes
@@ -1634,79 +1553,6 @@ func TestCatalog_ListServiceNodes(t *testing.T) {
 	}
 }
 
-// TestCatalog_ListServiceNodes_ServiceTags_V1_2_3Compat asserts the compatibility between <=v1.2.3 agents and >=v1.3.0 servers
-// see https://github.com/hashicorp/consul/issues/4922
-func TestCatalog_ListServiceNodes_ServiceTags_V1_2_3Compat(t *testing.T) {
-	t.Parallel()
-	dir1, s1 := testServer(t)
-	defer os.RemoveAll(dir1)
-	defer s1.Shutdown()
-	codec := rpcClient(t, s1)
-	defer codec.Close()
-
-	testrpc.WaitForTestAgent(t, s1.RPC, "dc1")
-
-	err := s1.fsm.State().EnsureNode(1, &structs.Node{Node: "foo", Address: "127.0.0.1"})
-	require.NoError(t, err)
-
-	// register two service instances with different tags
-	err = s1.fsm.State().EnsureService(2, "foo", &structs.NodeService{ID: "db1", Service: "db", Tags: []string{"primary"}, Address: "127.0.0.1", Port: 5000})
-	require.NoError(t, err)
-	err = s1.fsm.State().EnsureService(2, "foo", &structs.NodeService{ID: "db2", Service: "db", Tags: []string{"secondary"}, Address: "127.0.0.1", Port: 5001})
-	require.NoError(t, err)
-
-	// make a request with the <=1.2.3 ServiceTag tag field (vs ServiceTags)
-	args := structs.ServiceSpecificRequest{
-		Datacenter:  "dc1",
-		ServiceName: "db",
-		ServiceTag:  "primary",
-		TagFilter:   true,
-	}
-	var out structs.IndexedServiceNodes
-	err = msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &args, &out)
-	require.NoError(t, err)
-
-	// nodes should be filtered, even when using the old ServiceTag field
-	require.Equal(t, 1, len(out.ServiceNodes))
-	require.Equal(t, "db1", out.ServiceNodes[0].ServiceID)
-
-	// test with the other tag
-	args = structs.ServiceSpecificRequest{
-		Datacenter:  "dc1",
-		ServiceName: "db",
-		ServiceTag:  "secondary",
-		TagFilter:   true,
-	}
-	out = structs.IndexedServiceNodes{}
-	err = msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &args, &out)
-	require.NoError(t, err)
-	require.Equal(t, 1, len(out.ServiceNodes))
-	require.Equal(t, "db2", out.ServiceNodes[0].ServiceID)
-
-	// no tag, both instances
-	args = structs.ServiceSpecificRequest{
-		Datacenter:  "dc1",
-		ServiceName: "db",
-	}
-	out = structs.IndexedServiceNodes{}
-	err = msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &args, &out)
-	require.NoError(t, err)
-	require.Equal(t, 2, len(out.ServiceNodes))
-
-	// when both ServiceTag and ServiceTags fields are populated, use ServiceTag
-	args = structs.ServiceSpecificRequest{
-		Datacenter:  "dc1",
-		ServiceName: "db",
-		ServiceTag:  "primary",
-		ServiceTags: []string{"secondary"},
-		TagFilter:   true,
-	}
-	out = structs.IndexedServiceNodes{}
-	err = msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &args, &out)
-	require.NoError(t, err)
-	require.Equal(t, "db1", out.ServiceNodes[0].ServiceID)
-}
-
 func TestCatalog_ListServiceNodes_NodeMetaFilter(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServer(t)
@@ -1726,16 +1572,16 @@ func TestCatalog_ListServiceNodes_NodeMetaFilter(t *testing.T) {
 	if err := s1.fsm.State().EnsureNode(2, node2); err != nil {
 		t.Fatalf("err: %v", err)
 	}
-	if err := s1.fsm.State().EnsureService(3, "foo", &structs.NodeService{ID: "db", Service: "db", Tags: []string{"primary", "v2"}, Address: "127.0.0.1", Port: 5000}); err != nil {
+	if err := s1.fsm.State().EnsureService(3, "foo", &structs.NodeService{ID: "db", Service: "db", Tags: []string{"primary"}, Address: "127.0.0.1", Port: 5000}); err != nil {
 		t.Fatalf("err: %v", err)
 	}
-	if err := s1.fsm.State().EnsureService(4, "bar", &structs.NodeService{ID: "db2", Service: "db", Tags: []string{"secondary", "v2"}, Address: "127.0.0.2", Port: 5000}); err != nil {
+	if err := s1.fsm.State().EnsureService(4, "bar", &structs.NodeService{ID: "db2", Service: "db", Tags: []string{"secondary"}, Address: "127.0.0.2", Port: 5000}); err != nil {
 		t.Fatalf("err: %v", err)
 	}
 
 	cases := []struct {
 		filters  map[string]string
-		tags     []string
+		tag      string
 		services structs.ServiceNodes
 	}{
 		// Basic meta filter
@@ -1746,7 +1592,7 @@ func TestCatalog_ListServiceNodes_NodeMetaFilter(t *testing.T) {
 		// Basic meta filter, tag
 		{
 			filters:  map[string]string{"somekey": "somevalue"},
-			tags:     []string{"primary"},
+			tag:      "primary",
 			services: structs.ServiceNodes{&structs.ServiceNode{Node: "foo", ServiceID: "db"}},
 		},
 		// Common meta filter
@@ -1760,7 +1606,7 @@ func TestCatalog_ListServiceNodes_NodeMetaFilter(t *testing.T) {
 		// Common meta filter, tag
 		{
 			filters: map[string]string{"common": "1"},
-			tags:    []string{"secondary"},
+			tag:     "secondary",
 			services: structs.ServiceNodes{
 				&structs.ServiceNode{Node: "bar", ServiceID: "db2"},
 			},
@@ -1778,22 +1624,7 @@ func TestCatalog_ListServiceNodes_NodeMetaFilter(t *testing.T) {
 		// Multiple filter values, tag
 		{
 			filters:  map[string]string{"somekey": "somevalue", "common": "1"},
-			tags:     []string{"primary"},
-			services: structs.ServiceNodes{&structs.ServiceNode{Node: "foo", ServiceID: "db"}},
-		},
-		// Common meta filter, single tag
-		{
-			filters: map[string]string{"common": "1"},
-			tags:    []string{"v2"},
-			services: structs.ServiceNodes{
-				&structs.ServiceNode{Node: "bar", ServiceID: "db2"},
-				&structs.ServiceNode{Node: "foo", ServiceID: "db"},
-			},
-		},
-		// Common meta filter, multiple tags
-		{
-			filters:  map[string]string{"common": "1"},
-			tags:     []string{"v2", "primary"},
+			tag:      "primary",
 			services: structs.ServiceNodes{&structs.ServiceNode{Node: "foo", ServiceID: "db"}},
 		},
 	}
@@ -1803,12 +1634,17 @@ func TestCatalog_ListServiceNodes_NodeMetaFilter(t *testing.T) {
 			Datacenter:      "dc1",
 			NodeMetaFilters: tc.filters,
 			ServiceName:     "db",
-			ServiceTags:     tc.tags,
-			TagFilter:       len(tc.tags) > 0,
+			ServiceTag:      tc.tag,
+			TagFilter:       tc.tag != "",
 		}
 		var out structs.IndexedServiceNodes
-		require.NoError(t, msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &args, &out))
-		require.Len(t, out.ServiceNodes, len(tc.services))
+		if err := msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &args, &out); err != nil {
+			t.Fatalf("err: %v", err)
+		}
+
+		if len(out.ServiceNodes) != len(tc.services) {
+			t.Fatalf("bad: %v", out)
+		}
 
 		for i, serviceNode := range out.ServiceNodes {
 			if serviceNode.Node != tc.services[i].Node || serviceNode.ServiceID != tc.services[i].ServiceID {
@@ -1934,7 +1770,7 @@ func TestCatalog_ListServiceNodes_ConnectProxy(t *testing.T) {
 	assert.Len(resp.ServiceNodes, 1)
 	v := resp.ServiceNodes[0]
 	assert.Equal(structs.ServiceKindConnectProxy, v.ServiceKind)
-	assert.Equal(args.Service.Proxy.DestinationServiceName, v.ServiceProxy.DestinationServiceName)
+	assert.Equal(args.Service.ProxyDestination, v.ServiceProxyDestination)
 }
 
 func TestCatalog_ListServiceNodes_ConnectDestination(t *testing.T) {
@@ -1956,7 +1792,7 @@ func TestCatalog_ListServiceNodes_ConnectDestination(t *testing.T) {
 
 	// Register the service
 	{
-		dst := args.Service.Proxy.DestinationServiceName
+		dst := args.Service.ProxyDestination
 		args := structs.TestRegisterRequest(t)
 		args.Service.Service = dst
 		var out struct{}
@@ -1967,25 +1803,25 @@ func TestCatalog_ListServiceNodes_ConnectDestination(t *testing.T) {
 	req := structs.ServiceSpecificRequest{
 		Connect:     true,
 		Datacenter:  "dc1",
-		ServiceName: args.Service.Proxy.DestinationServiceName,
+		ServiceName: args.Service.ProxyDestination,
 	}
 	var resp structs.IndexedServiceNodes
 	assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &req, &resp))
 	assert.Len(resp.ServiceNodes, 1)
 	v := resp.ServiceNodes[0]
 	assert.Equal(structs.ServiceKindConnectProxy, v.ServiceKind)
-	assert.Equal(args.Service.Proxy.DestinationServiceName, v.ServiceProxy.DestinationServiceName)
+	assert.Equal(args.Service.ProxyDestination, v.ServiceProxyDestination)
 
 	// List by non-Connect
 	req = structs.ServiceSpecificRequest{
 		Datacenter:  "dc1",
-		ServiceName: args.Service.Proxy.DestinationServiceName,
+		ServiceName: args.Service.ProxyDestination,
 	}
 	assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.ServiceNodes", &req, &resp))
 	assert.Len(resp.ServiceNodes, 1)
 	v = resp.ServiceNodes[0]
-	assert.Equal(args.Service.Proxy.DestinationServiceName, v.ServiceName)
-	assert.Equal("", v.ServiceProxy.DestinationServiceName)
+	assert.Equal(args.Service.ProxyDestination, v.ServiceName)
+	assert.Equal("", v.ServiceProxyDestination)
 }
 
 // Test that calling ServiceNodes with Connect: true will return
@@ -2037,7 +1873,6 @@ func TestCatalog_ListServiceNodes_ConnectProxy_ACL(t *testing.T) {
 	assert := assert.New(t)
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 	})
@@ -2054,7 +1889,7 @@ func TestCatalog_ListServiceNodes_ConnectProxy_ACL(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 service "foo" {
 	policy = "write"
@@ -2070,7 +1905,7 @@ service "foo" {
 		// Register a proxy
 		args := structs.TestRegisterRequestProxy(t)
 		args.Service.Service = "foo-proxy"
-		args.Service.Proxy.DestinationServiceName = "bar"
+		args.Service.ProxyDestination = "bar"
 		args.WriteRequest.Token = "root"
 		var out struct{}
 		assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out))
@@ -2078,14 +1913,14 @@ service "foo" {
 		// Register a proxy
 		args = structs.TestRegisterRequestProxy(t)
 		args.Service.Service = "foo-proxy"
-		args.Service.Proxy.DestinationServiceName = "foo"
+		args.Service.ProxyDestination = "foo"
 		args.WriteRequest.Token = "root"
 		assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out))
 
 		// Register a proxy
 		args = structs.TestRegisterRequestProxy(t)
 		args.Service.Service = "another-proxy"
-		args.Service.Proxy.DestinationServiceName = "foo"
+		args.Service.ProxyDestination = "foo"
 		args.WriteRequest.Token = "root"
 		assert.Nil(msgpackrpc.CallWithCodec(codec, "Catalog.Register", &args, &out))
 	}
@@ -2225,7 +2060,7 @@ func TestCatalog_NodeServices_ConnectProxy(t *testing.T) {
 	assert.Len(resp.NodeServices.Services, 1)
 	v := resp.NodeServices.Services[args.Service.Service]
 	assert.Equal(structs.ServiceKindConnectProxy, v.Kind)
-	assert.Equal(args.Service.Proxy.DestinationServiceName, v.Proxy.DestinationServiceName)
+	assert.Equal(args.Service.ProxyDestination, v.ProxyDestination)
 }
 
 func TestCatalog_NodeServices_ConnectNative(t *testing.T) {
@@ -2309,7 +2144,6 @@ func TestCatalog_Register_FailedCase1(t *testing.T) {
 func testACLFilterServer(t *testing.T) (dir, token string, srv *Server, codec rpc.ClientCodec) {
 	dir, srv = testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
@@ -2324,7 +2158,7 @@ func testACLFilterServer(t *testing.T) (dir, token string, srv *Server, codec rp
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: `
 service "foo" {
 	policy = "write"
@@ -2457,7 +2291,6 @@ func TestCatalog_NodeServices_ACLDeny(t *testing.T) {
 	t.Parallel()
 	dir1, s1 := testServerWithConfig(t, func(c *Config) {
 		c.ACLDatacenter = "dc1"
-		c.ACLsEnabled = true
 		c.ACLMasterToken = "root"
 		c.ACLDefaultPolicy = "deny"
 		c.ACLEnforceVersion8 = false
@@ -2497,7 +2330,7 @@ func TestCatalog_NodeServices_ACLDeny(t *testing.T) {
 		Op:         structs.ACLSet,
 		ACL: structs.ACL{
 			Name: "User token",
-			Type: structs.ACLTokenTypeClient,
+			Type: structs.ACLTypeClient,
 			Rules: fmt.Sprintf(`
 node "%s" {
 	policy = "read"

@@ -41,7 +41,3 @@ func (c *ConnectCARoot) Fetch(opts cache.FetchOptions, req cache.Request) (cache
 	result.Index = reply.QueryMeta.Index
 	return result, nil
 }
-
-func (c *ConnectCARoot) SupportsBlocking() bool {
-	return true
-}

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/consul/autopilot"
+	"github.com/Beeketing/consul/agent/consul/autopilot"
 	"github.com/pascaldekloe/goe/verify"
 )
 

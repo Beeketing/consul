@@ -3,8 +3,8 @@ package acl
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/sentinel"
-	"github.com/hashicorp/hcl"
+	"github.com/Beeketing/consul/sentinel"
+	"github.com/Beeketing/hcl"
 )
 
 const (

@@ -11,8 +11,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	metrics "github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/connect"
+	metrics "github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/connect"
 )
 
 const (

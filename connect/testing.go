@@ -11,10 +11,10 @@ import (
 	"os"
 	"sync/atomic"
 
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib/freeport"
-	testing "github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib/freeport"
+	testing "github.com/Beeketing/go-testing-interface"
 )
 
 // TestService returns a Service instance based on a static TLS Config.

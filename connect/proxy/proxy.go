@@ -5,9 +5,9 @@ import (
 	"crypto/x509"
 	"log"
 
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/connect"
-	"github.com/hashicorp/consul/lib"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/connect"
+	"github.com/Beeketing/consul/lib"
 )
 
 // Proxy implements the built-in connect proxy.

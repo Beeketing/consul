@@ -9,18 +9,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/go-memdb"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/agent/config"
-	"github.com/hashicorp/consul/agent/local"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/agent/token"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/testutil/retry"
-	"github.com/hashicorp/consul/types"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/agent/config"
+	"github.com/Beeketing/consul/agent/local"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/token"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/testutil/retry"
+	"github.com/Beeketing/consul/types"
 	"github.com/pascaldekloe/goe/verify"
 	"github.com/stretchr/testify/assert"
 )

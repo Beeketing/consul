@@ -6,10 +6,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/hashicorp/consul/command"
-	"github.com/hashicorp/consul/lib"
-	_ "github.com/hashicorp/consul/service_os"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/command"
+	"github.com/Beeketing/consul/lib"
+	_ "github.com/Beeketing/consul/service_os"
+	"github.com/Beeketing/cli"
 )
 
 func init() {

@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/consul/lib/file"
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/consul/lib/file"
+	"github.com/Beeketing/mapstructure"
 )
 
 // Constants related to restart timers with the daemon mode proxies. At some

@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // checkCoordinateDisabled will return a standard response if coordinates are

@@ -8,10 +8,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/hashicorp/consul/agent/consul"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/memberlist"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/consul"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/memberlist"
+	"github.com/Beeketing/serf/serf"
 )
 
 const (

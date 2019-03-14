@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/hashicorp/consul/agent/cache"
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/consul/agent/cache"
+	"github.com/Beeketing/go-testing-interface"
 )
 
 // TestRPC returns a mock implementation of the RPC interface.

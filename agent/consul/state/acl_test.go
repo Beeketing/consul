@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-memdb"
 	"github.com/pascaldekloe/goe/verify"
 )
 

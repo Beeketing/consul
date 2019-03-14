@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/types"
-	"github.com/mitchellh/copystructure"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/copystructure"
 )
 
 var (

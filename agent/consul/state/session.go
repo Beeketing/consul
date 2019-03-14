@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/go-memdb"
 )
 
 // sessionsTableSchema returns a new table schema used for storing session

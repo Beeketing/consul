@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/types"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/types"
 	"github.com/pascaldekloe/goe/verify"
 )
 

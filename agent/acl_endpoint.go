@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // aclCreateResponse is used to wrap the ACL ID

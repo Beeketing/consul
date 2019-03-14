@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/agent"
+	"github.com/Beeketing/consul/agent"
 	"github.com/mitchellh/cli"
 )
 

@@ -5,8 +5,8 @@ package consul
 import (
 	"net"
 
-	"github.com/hashicorp/consul/agent/pool"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/pool"
+	"github.com/Beeketing/serf/serf"
 )
 
 type EnterpriseServer struct{}

@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/hashicorp/consul/agent/consul/autopilot"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
-	multierror "github.com/hashicorp/go-multierror"
-	"github.com/hashicorp/raft"
+	"github.com/Beeketing/consul/agent/consul/autopilot"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
+	multierror "github.com/Beeketing/go-multierror"
+	"github.com/Beeketing/raft"
 )
 
 // OperatorRaftConfiguration is used to inspect the current Raft configuration.

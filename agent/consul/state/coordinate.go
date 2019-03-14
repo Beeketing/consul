@@ -3,9 +3,9 @@ package state
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/go-memdb"
 )
 
 // coordinatesTableSchema returns a new table schema used for storing

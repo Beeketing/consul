@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/serf/serf"
 )
 
 func TestGetPrivateIP(t *testing.T) {

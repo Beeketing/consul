@@ -11,15 +11,15 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/armon/go-metrics"
+	"github.com/Beeketing/go-metrics"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/agent/token"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/consul/types"
-	"github.com/hashicorp/go-uuid"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/token"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/go-uuid"
 )
 
 // Config is the configuration for the State.

@@ -10,13 +10,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/consul/agent/cache"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/types"
-	"github.com/hashicorp/go-msgpack/codec"
-	"github.com/hashicorp/go-multierror"
-	"github.com/hashicorp/serf/coordinate"
-	"github.com/mitchellh/hashstructure"
+	"github.com/Beeketing/consul/agent/cache"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/go-msgpack/codec"
+	"github.com/Beeketing/go-multierror"
+	"github.com/Beeketing/serf/coordinate"
+	"github.com/Beeketing/hashstructure"
 )
 
 type MessageType uint8

@@ -7,10 +7,10 @@ import (
 	"sort"
 	"time"
 
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/hashicorp/consul/command/intention/finder"
-	"github.com/mitchellh/cli"
-	"github.com/ryanuber/columnize"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/consul/command/intention/finder"
+	"github.com/Beeketing/cli"
+	"github.com/Beeketing/columnize"
 )
 
 func New(ui cli.Ui) *cmd {

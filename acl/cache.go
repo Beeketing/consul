@@ -4,8 +4,8 @@ import (
 	"crypto/md5"
 	"fmt"
 
-	"github.com/hashicorp/consul/sentinel"
-	"github.com/hashicorp/golang-lru"
+	"github.com/Beeketing/consul/sentinel"
+	"github.com/Beeketing/golang-lru"
 )
 
 // FaultFunc is a function used to fault in the parent,

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/consul/lib"
-	discover "github.com/hashicorp/go-discover"
+	"github.com/Beeketing/consul/lib"
+	discover "github.com/Beeketing/go-discover"
 )
 
 func (a *Agent) retryJoinLAN() {

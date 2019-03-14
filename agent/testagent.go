@@ -15,17 +15,17 @@ import (
 	"strings"
 	"time"
 
-	metrics "github.com/armon/go-metrics"
-	uuid "github.com/hashicorp/go-uuid"
+	metrics "github.com/Beeketing/go-metrics"
+	uuid "github.com/Beeketing/go-uuid"
 
-	"github.com/hashicorp/consul/agent/config"
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/agent/consul"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/lib/freeport"
-	"github.com/hashicorp/consul/logger"
-	"github.com/hashicorp/consul/testutil/retry"
+	"github.com/Beeketing/consul/agent/config"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/agent/consul"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/lib/freeport"
+	"github.com/Beeketing/consul/logger"
+	"github.com/Beeketing/consul/testutil/retry"
 )
 
 func init() {

@@ -1,7 +1,7 @@
 package agent
 
 import (
-	"github.com/armon/go-radix"
+	"github.com/Beeketing/go-radix"
 )
 
 // Blacklist implements an HTTP endpoint blacklist based on a list of endpoint

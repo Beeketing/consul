@@ -3,7 +3,7 @@ package autopilot
 import (
 	"time"
 
-	"github.com/hashicorp/raft"
+	"github.com/Beeketing/raft"
 )
 
 // PromoteStableServers is a basic autopilot promotion policy that promotes any

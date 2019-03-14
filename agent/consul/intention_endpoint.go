@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/agent/consul/state"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-memdb"
-	"github.com/hashicorp/go-uuid"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/agent/consul/state"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-memdb"
+	"github.com/Beeketing/go-uuid"
 )
 
 var (

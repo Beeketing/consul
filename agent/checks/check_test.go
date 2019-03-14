@@ -15,11 +15,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/mock"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/testutil/retry"
-	"github.com/hashicorp/consul/types"
-	uuid "github.com/hashicorp/go-uuid"
+	"github.com/Beeketing/consul/agent/mock"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/testutil/retry"
+	"github.com/Beeketing/consul/types"
+	uuid "github.com/Beeketing/go-uuid"
 )
 
 func uniqueID() string {

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/hashicorp/consul/acl"
+	"github.com/Beeketing/consul/acl"
 )
 
 // ACLOp is used in RPCs to encode ACL operations.

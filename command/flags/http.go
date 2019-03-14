@@ -3,7 +3,7 @@ package flags
 import (
 	"flag"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/api"
 )
 
 type HTTPFlags struct {

@@ -15,9 +15,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-uuid"
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-uuid"
+	"github.com/Beeketing/go-testing-interface"
 )
 
 // TestClusterID is the Consul cluster ID for testing.

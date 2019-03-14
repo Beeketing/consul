@@ -3,8 +3,8 @@ package finder
 import (
 	"testing"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/api"
 	"github.com/stretchr/testify/require"
 )
 

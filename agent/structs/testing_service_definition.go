@@ -1,7 +1,7 @@
 package structs
 
 import (
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/go-testing-interface"
 )
 
 // TestServiceDefinition returns a ServiceDefinition for a typical service.

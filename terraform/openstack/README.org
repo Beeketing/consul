@@ -24,7 +24,7 @@
   You should now be able to use openstack as a provider for the consul module.
   #+BEGIN_SRC terraform
   module "consul" {
-    source = "github.com/hashicorp/consul/terraform/openstack"
+    source = "github.com/Beeketing/consul/terraform/openstack"
     servers = 3
   }
   #+END_SRC

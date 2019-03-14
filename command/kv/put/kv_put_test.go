@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/testutil"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/testutil"
 	"github.com/mitchellh/cli"
 )
 

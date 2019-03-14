@@ -10,12 +10,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/agent/pool"
-	"github.com/hashicorp/consul/agent/router"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/agent/pool"
+	"github.com/Beeketing/consul/agent/router"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/serf/serf"
 	"golang.org/x/time/rate"
 )
 

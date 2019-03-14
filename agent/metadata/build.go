@@ -1,8 +1,8 @@
 package metadata
 
 import (
-	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/go-version"
+	"github.com/Beeketing/serf/serf"
 )
 
 // Build extracts the Consul version info for a member.

@@ -7,9 +7,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hashicorp/consul/agent/cache"
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/cache"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // Recommended name for registration.

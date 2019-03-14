@@ -6,11 +6,11 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/agent/consul/autopilot"
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/raft"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/agent/consul/autopilot"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/raft"
+	"github.com/Beeketing/serf/serf"
 )
 
 // AutopilotDelegate is a Consul delegate for autopilot operations.

@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/mitchellh/cli"
-	"github.com/ryanuber/columnize"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/cli"
+	"github.com/Beeketing/columnize"
 )
 
 func New(ui cli.Ui) *cmd {

@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/testutil/retry"
-	"github.com/hashicorp/go-uuid"
+	"github.com/Beeketing/consul/testutil/retry"
+	"github.com/Beeketing/go-uuid"
 	"github.com/stretchr/testify/require"
 )
 

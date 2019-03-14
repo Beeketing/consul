@@ -14,13 +14,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/NYTimes/gziphandler"
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/cache"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-cleanhttp"
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/gziphandler"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/cache"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-cleanhttp"
+	"github.com/Beeketing/mapstructure"
 )
 
 // MethodNotAllowedError should be returned by a handler when the HTTP method is not allowed.

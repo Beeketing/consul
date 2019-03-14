@@ -12,10 +12,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/testutil"
-	cleanhttp "github.com/hashicorp/go-cleanhttp"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/testutil"
+	cleanhttp "github.com/Beeketing/go-cleanhttp"
 )
 
 func TestUiIndex(t *testing.T) {

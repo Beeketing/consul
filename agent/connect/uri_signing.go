@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // SpiffeIDSigning is the structure to represent the SPIFFE ID for a

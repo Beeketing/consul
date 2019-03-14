@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/agent/consul/autopilot"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/agent/consul/autopilot"
+	"github.com/Beeketing/consul/agent/structs"
 	"github.com/mitchellh/cli"
 )
 

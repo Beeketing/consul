@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/raft"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/raft"
+	"github.com/Beeketing/serf/serf"
 )
 
 // RaftGetConfiguration is used to retrieve the current Raft configuration.

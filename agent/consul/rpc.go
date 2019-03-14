@@ -8,16 +8,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/agent/consul/state"
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/agent/pool"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib"
-	memdb "github.com/hashicorp/go-memdb"
-	"github.com/hashicorp/memberlist"
-	"github.com/hashicorp/net-rpc-msgpackrpc"
-	"github.com/hashicorp/yamux"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/agent/consul/state"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/agent/pool"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib"
+	memdb "github.com/Beeketing/go-memdb"
+	"github.com/Beeketing/memberlist"
+	"github.com/Beeketing/net-rpc-msgpackrpc"
+	"github.com/Beeketing/yamux"
 )
 
 const (

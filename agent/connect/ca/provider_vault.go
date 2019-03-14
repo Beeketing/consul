@@ -9,11 +9,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-uuid"
-	vaultapi "github.com/hashicorp/vault/api"
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-uuid"
+	vaultapi "github.com/Beeketing/vault/api"
+	"github.com/Beeketing/mapstructure"
 )
 
 const VaultCALeafCertRole = "leaf-cert"

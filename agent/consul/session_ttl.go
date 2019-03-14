@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 const (

@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/hashicorp/consul/agent/token"
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/consul/agent/token"
+	"github.com/Beeketing/go-testing-interface"
 )
 
 // TestState returns a configured *State for testing.

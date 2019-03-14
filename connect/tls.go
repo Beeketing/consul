@@ -11,8 +11,8 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/api"
 )
 
 // verifierFunc is a function that can accept rawCertificate bytes from a peer

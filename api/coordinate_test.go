@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/testutil/retry"
-	"github.com/hashicorp/serf/coordinate"
+	"github.com/Beeketing/consul/testutil/retry"
+	"github.com/Beeketing/serf/coordinate"
 	"github.com/pascaldekloe/goe/verify"
 )
 

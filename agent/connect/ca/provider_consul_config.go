@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/mapstructure"
 )
 
 func ParseConsulCAConfig(raw map[string]interface{}) (*structs.ConsulCAProviderConfig, error) {

@@ -10,10 +10,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/consul/tlsutil"
-	"github.com/hashicorp/net-rpc-msgpackrpc"
-	"github.com/hashicorp/yamux"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/consul/tlsutil"
+	"github.com/Beeketing/net-rpc-msgpackrpc"
+	"github.com/Beeketing/yamux"
 )
 
 const defaultDialTimeout = 10 * time.Second

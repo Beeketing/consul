@@ -6,9 +6,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/serf/serf"
 )
 
 // LANMembersAllSegments returns members from all segments.

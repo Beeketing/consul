@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/go-rootcerts"
+	"github.com/Beeketing/go-rootcerts"
 )
 
 // DCWrapper is a function that is used to wrap a non-TLS connection

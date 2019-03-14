@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/raft"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/raft"
 )
 
 // ServerLookup encapsulates looking up servers by id and address

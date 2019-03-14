@@ -12,14 +12,14 @@ import (
 	"sort"
 	"strconv"
 
-	proxyAgent "github.com/hashicorp/consul/agent/proxy"
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/command/flags"
-	proxyImpl "github.com/hashicorp/consul/connect/proxy"
+	proxyAgent "github.com/Beeketing/consul/agent/proxy"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/command/flags"
+	proxyImpl "github.com/Beeketing/consul/connect/proxy"
 
-	"github.com/hashicorp/consul/logger"
-	"github.com/hashicorp/logutils"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/logger"
+	"github.com/Beeketing/logutils"
+	"github.com/Beeketing/cli"
 )
 
 func New(ui cli.Ui, shutdownCh <-chan struct{}) *cmd {

@@ -3,7 +3,7 @@
 package consul
 
 import (
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/serf/serf"
 )
 
 type EnterpriseClient struct{}

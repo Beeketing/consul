@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/pkg/errors"
+	"github.com/Beeketing/errors"
 )
 
 // copied from testutil to break circular dependency

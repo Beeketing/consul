@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	consulfsm "github.com/hashicorp/consul/agent/consul/fsm"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
+	consulfsm "github.com/Beeketing/consul/agent/consul/fsm"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
 	"github.com/hashicorp/raft"
 )
 

@@ -1,8 +1,8 @@
 package acl
 
 import (
-	"github.com/armon/go-radix"
-	"github.com/hashicorp/consul/sentinel"
+	"github.com/Beeketing/go-radix"
+	"github.com/Beeketing/consul/sentinel"
 )
 
 var (

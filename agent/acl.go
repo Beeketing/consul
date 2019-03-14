@@ -5,14 +5,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/config"
-	"github.com/hashicorp/consul/agent/local"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/types"
-	"github.com/hashicorp/golang-lru"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/config"
+	"github.com/Beeketing/consul/agent/local"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/golang-lru"
+	"github.com/Beeketing/serf/serf"
 )
 
 // There's enough behavior difference with client-side ACLs that we've

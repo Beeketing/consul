@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	metrics "github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/agent/structs"
+	metrics "github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 var durations = NewDurationFixer("interval", "timeout", "deregistercriticalserviceafter")

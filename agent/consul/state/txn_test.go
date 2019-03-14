@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/api"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/api"
 )
 
 func TestStateStore_Txn_KVS(t *testing.T) {

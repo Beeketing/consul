@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	multierror "github.com/hashicorp/go-multierror"
-	"github.com/hashicorp/hcl"
-	"github.com/mitchellh/mapstructure"
+	multierror "github.com/Beeketing/go-multierror"
+	"github.com/Beeketing/hcl"
+	"github.com/Beeketing/mapstructure"
 )
 
 const (

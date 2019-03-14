@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"reflect"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib/file"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib/file"
 )
 
 // snapshot is the structure of the snapshot file. This is unexported because

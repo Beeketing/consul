@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/structs"
 	"github.com/hashicorp/raft"
 	"github.com/stretchr/testify/assert"
 )

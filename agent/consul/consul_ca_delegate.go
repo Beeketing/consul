@@ -1,8 +1,8 @@
 package consul
 
 import (
-	"github.com/hashicorp/consul/agent/consul/state"
-	"github.com/hashicorp/consul/agent/structs"
+	"github.com/Beeketing/consul/agent/consul/state"
+	"github.com/Beeketing/consul/agent/structs"
 )
 
 // consulCADelegate providers callbacks for the Consul CA provider

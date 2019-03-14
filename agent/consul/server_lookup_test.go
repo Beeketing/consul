@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/consul/agent/metadata"
+	"github.com/Beeketing/consul/agent/metadata"
 	"github.com/hashicorp/raft"
 )
 

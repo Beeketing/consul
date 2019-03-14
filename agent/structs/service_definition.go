@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/hashicorp/go-multierror"
-	"github.com/mitchellh/copystructure"
-	"github.com/mitchellh/mapstructure"
-	"github.com/mitchellh/reflectwalk"
+	"github.com/Beeketing/go-multierror"
+	"github.com/Beeketing/copystructure"
+	"github.com/Beeketing/mapstructure"
+	"github.com/Beeketing/reflectwalk"
 )
 
 // ServiceDefinition is used to JSON decode the Service definitions. For

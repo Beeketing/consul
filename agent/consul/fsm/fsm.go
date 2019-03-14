@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/consul/agent/consul/state"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-msgpack/codec"
-	"github.com/hashicorp/raft"
+	"github.com/Beeketing/consul/agent/consul/state"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-msgpack/codec"
+	"github.com/Beeketing/raft"
 )
 
 // msgpackHandle is a shared handle for encoding/decoding msgpack payloads

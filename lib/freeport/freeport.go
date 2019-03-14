@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mitchellh/go-testing-interface"
+	"github.com/Beeketing/go-testing-interface"
 )
 
 const (

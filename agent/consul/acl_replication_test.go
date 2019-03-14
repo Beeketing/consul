@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/testrpc"
-	"github.com/hashicorp/consul/testutil/retry"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/testrpc"
+	"github.com/Beeketing/consul/testutil/retry"
 )
 
 func TestACLReplication_Sorter(t *testing.T) {

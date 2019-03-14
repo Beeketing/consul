@@ -11,13 +11,13 @@ import (
 
 	"regexp"
 
-	"github.com/armon/go-metrics"
-	"github.com/coredns/coredns/plugin/pkg/dnsutil"
-	"github.com/hashicorp/consul/agent/config"
-	"github.com/hashicorp/consul/agent/consul"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/lib"
-	"github.com/miekg/dns"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/coredns/plugin/pkg/dnsutil"
+	"github.com/Beeketing/consul/agent/config"
+	"github.com/Beeketing/consul/agent/consul"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/dns"
 )
 
 const (

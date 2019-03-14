@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/armon/go-metrics"
+	"github.com/Beeketing/go-metrics"
 )
 
 //go:generate mockery -all -inpkg

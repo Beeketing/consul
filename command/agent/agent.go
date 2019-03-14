@@ -12,16 +12,16 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/agent/config"
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/consul/logger"
-	"github.com/hashicorp/consul/service_os"
-	"github.com/hashicorp/go-checkpoint"
-	multierror "github.com/hashicorp/go-multierror"
-	"github.com/hashicorp/logutils"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/agent/config"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/consul/logger"
+	"github.com/Beeketing/consul/service_os"
+	"github.com/Beeketing/go-checkpoint"
+	multierror "github.com/Beeketing/go-multierror"
+	"github.com/Beeketing/logutils"
+	"github.com/Beeketing/cli"
 )
 
 func New(ui cli.Ui, revision, version, versionPre, versionHuman string, shutdownCh <-chan struct{}) *cmd {

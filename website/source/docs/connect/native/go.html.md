@@ -39,8 +39,8 @@ Example, followed by more details:
 import(
   "net/http"
 
-  "github.com/hashicorp/consul/api"
-  "github.com/hashicorp/consul/connect"
+  "github.com/Beeketing/consul/api"
+  "github.com/Beeketing/consul/connect"
 )
 
 func main() {
@@ -90,8 +90,8 @@ Another example is shown below with just a plain TLS listener:
 import(
   "crypto/tls"
 
-  "github.com/hashicorp/consul/api"
-  "github.com/hashicorp/consul/connect"
+  "github.com/Beeketing/consul/api"
+  "github.com/Beeketing/consul/connect"
 )
 
 func main() {
@@ -122,8 +122,8 @@ Example, followed by more details:
 
 ```go
 import(
-  "github.com/hashicorp/consul/api"
-  "github.com/hashicorp/consul/connect"
+  "github.com/Beeketing/consul/api"
+  "github.com/Beeketing/consul/connect"
 )
 
 func main() {
@@ -177,8 +177,8 @@ Example:
 import(
   "context"
 
-  "github.com/hashicorp/consul/api"
-  "github.com/hashicorp/consul/connect"
+  "github.com/Beeketing/consul/api"
+  "github.com/Beeketing/consul/connect"
 )
 
 func main() {

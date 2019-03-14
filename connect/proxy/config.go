@@ -5,13 +5,13 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/mapstructure"
 
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/connect"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/consul/watch"
-	"github.com/hashicorp/hcl"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/connect"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/consul/watch"
+	"github.com/Beeketing/hcl"
 )
 
 // Config is the publicly configurable state for an entire proxy instance. It's

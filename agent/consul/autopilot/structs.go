@@ -3,7 +3,7 @@ package autopilot
 import (
 	"time"
 
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/serf/serf"
 )
 
 // Config holds the Autopilot configuration for a cluster.

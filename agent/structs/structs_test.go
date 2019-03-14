@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/types"
+	"github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/types"
 	"github.com/stretchr/testify/assert"
 )
 

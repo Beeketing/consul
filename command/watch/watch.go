@@ -10,11 +10,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/consul/agent"
-	"github.com/hashicorp/consul/agent/exec"
-	"github.com/hashicorp/consul/command/flags"
-	consulwatch "github.com/hashicorp/consul/watch"
-	"github.com/mitchellh/cli"
+	"github.com/Beeketing/consul/agent"
+	"github.com/Beeketing/consul/agent/exec"
+	"github.com/Beeketing/consul/command/flags"
+	consulwatch "github.com/Beeketing/consul/watch"
+	"github.com/Beeketing/cli"
 )
 
 func New(ui cli.Ui, shutdownCh <-chan struct{}) *cmd {

@@ -3,7 +3,7 @@ package state
 import (
 	"fmt"
 
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/go-memdb"
 )
 
 // Tombstone is the internal type used to track tombstones.

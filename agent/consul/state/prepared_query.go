@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/hashicorp/consul/agent/consul/prepared_query"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/agent/consul/prepared_query"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-memdb"
 )
 
 // preparedQueriesTableSchema returns a new table schema used for storing

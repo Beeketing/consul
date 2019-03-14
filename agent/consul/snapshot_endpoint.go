@@ -16,11 +16,11 @@ import (
 	"net"
 	"time"
 
-	"github.com/hashicorp/consul/acl"
-	"github.com/hashicorp/consul/agent/pool"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/snapshot"
-	"github.com/hashicorp/go-msgpack/codec"
+	"github.com/Beeketing/consul/acl"
+	"github.com/Beeketing/consul/agent/pool"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/snapshot"
+	"github.com/Beeketing/go-msgpack/codec"
 )
 
 // dispatchSnapshotRequest takes an incoming request structure with possibly some

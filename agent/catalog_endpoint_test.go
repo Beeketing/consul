@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/consul/testutil/retry"
-	"github.com/hashicorp/serf/coordinate"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/consul/testutil/retry"
+	"github.com/Beeketing/serf/coordinate"
 	"github.com/stretchr/testify/assert"
 )
 

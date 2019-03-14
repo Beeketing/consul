@@ -10,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	metrics "github.com/armon/go-metrics"
+	metrics "github.com/Beeketing/go-metrics"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	agConnect "github.com/hashicorp/consul/agent/connect"
-	"github.com/hashicorp/consul/connect"
-	"github.com/hashicorp/consul/lib/freeport"
+	agConnect "github.com/Beeketing/consul/agent/connect"
+	"github.com/Beeketing/consul/connect"
+	"github.com/Beeketing/consul/lib/freeport"
 )
 
 func testSetupMetrics(t *testing.T) *metrics.InmemSink {

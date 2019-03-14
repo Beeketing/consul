@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/agent/pool"
-	"github.com/hashicorp/consul/testrpc"
+	"github.com/Beeketing/consul/agent/pool"
+	"github.com/Beeketing/consul/testrpc"
 	"github.com/hashicorp/net-rpc-msgpackrpc"
 )
 

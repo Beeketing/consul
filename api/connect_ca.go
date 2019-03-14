@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/mapstructure"
 )
 
 // CAConfig is the structure for the Connect CA configuration.

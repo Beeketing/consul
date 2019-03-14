@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/Beeketing/mapstructure"
 )
 
 // TODO (slackpad) - Trying out a different pattern here for config handling.

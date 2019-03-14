@@ -3,7 +3,7 @@ package lib_test
 import (
 	"testing"
 
-	"github.com/hashicorp/consul/lib"
+	"github.com/Beeketing/consul/lib"
 )
 
 func TestMathAbsInt(t *testing.T) {

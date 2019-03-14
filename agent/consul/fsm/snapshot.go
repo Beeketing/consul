@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/armon/go-metrics"
-	"github.com/hashicorp/consul/agent/consul/state"
-	"github.com/hashicorp/consul/agent/structs"
-	"github.com/hashicorp/go-msgpack/codec"
-	"github.com/hashicorp/raft"
+	"github.com/Beeketing/go-metrics"
+	"github.com/Beeketing/consul/agent/consul/state"
+	"github.com/Beeketing/consul/agent/structs"
+	"github.com/Beeketing/go-msgpack/codec"
+	"github.com/Beeketing/raft"
 )
 
 // snapshot is used to provide a snapshot of the current

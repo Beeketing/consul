@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/logger"
+	"github.com/Beeketing/consul/logger"
 )
 
 // extra endpoints that should be tested, and their allowed methods

@@ -8,11 +8,11 @@ import (
 	"sort"
 	"strings"
 
-	consulapi "github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/command/flags"
-	"github.com/hashicorp/serf/serf"
-	"github.com/mitchellh/cli"
-	"github.com/ryanuber/columnize"
+	consulapi "github.com/Beeketing/consul/api"
+	"github.com/Beeketing/consul/command/flags"
+	"github.com/Beeketing/serf/serf"
+	"github.com/Beeketing/cli"
+	"github.com/Beeketing/columnize"
 )
 
 // cmd is a Command implementation that queries a running

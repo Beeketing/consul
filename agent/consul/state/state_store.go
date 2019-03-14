@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hashicorp/consul/types"
-	"github.com/hashicorp/go-memdb"
+	"github.com/Beeketing/consul/types"
+	"github.com/Beeketing/go-memdb"
 )
 
 var (

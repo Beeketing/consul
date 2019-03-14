@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/hashicorp/consul/agent/metadata"
-	"github.com/hashicorp/consul/lib"
-	"github.com/hashicorp/serf/serf"
+	"github.com/Beeketing/consul/agent/metadata"
+	"github.com/Beeketing/consul/lib"
+	"github.com/Beeketing/serf/serf"
 )
 
 // setupSerf is used to setup and initialize a Serf

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/consul/lib"
+	"github.com/Beeketing/consul/lib"
 )
 
 func TestAE_scaleFactor(t *testing.T) {
